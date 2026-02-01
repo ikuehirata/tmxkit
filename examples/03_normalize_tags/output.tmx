@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE tmx SYSTEM "tmx14.dtd">
+<tmx version="1.4">
+<header creationtool="MemoQ" creationtoolversion="11.6.8" segtype="sentence" adminlang="en-us" creationid="user" srclang="en" o-tmf="MemoQTM" datatype="unknown">
+  <prop type="defclient"> </prop>
+  <prop type="defproject"> </prop>
+  <prop type="defdomain"> </prop>
+  <prop type="defsubject"> </prop>
+  <prop type="description"> </prop>
+  <prop type="targetlang">ja</prop>
+  <prop type="name">dum</prop>
+</header>
+<body>
+<tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-post">&lt;seg&gt;Duis feugiat &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;volutpat tellus&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt; a lobortis.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>Lorem ipsum dolor sit amet, <bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>consectetur adipiscing elit<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept>.</seg></tuv>
+    <tuv xml:lang="ja">
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>ロレムイプサムドロールシトアメット、<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>コンセクテトゥルアディピシングエリト<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept>。</seg></tuv>
+  </tu>
+  <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Lorem ipsum dolor sit amet, &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;consectetur adipiscing elit&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Maecenas hendrerit et odio non tincidunt.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;br&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;br&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Vivamus nec &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;feugiat nibh&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;, sit amet posuere sem.&lt;/seg&gt;</prop>
+      <seg>Duis feugiat <bpt i="1">&lt;mq:rxt displaytext="&amp;lt;i&amp;gt;" val="&amp;lt;i&amp;gt;"&gt;</bpt>volutpat tellus<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/i&amp;gt;" val="&amp;lt;/i&amp;gt;"&gt;</ept> a lobortis.<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+    <tuv xml:lang="ja">
+      <seg>デュイスフェウギアト<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;i&amp;gt;" val="&amp;lt;i&amp;gt;"&gt;</bpt>ヴォルットパトテルルス<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/i&amp;gt;" val="&amp;lt;/i&amp;gt;"&gt;</ept>アロボルティス。<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+  </tu>
+  <tu changedate="20260131T191044Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;Duis feugiat &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;volutpat tellus&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt; a lobortis.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;Ut varius nunc sit amet ex pulvinar, vel &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;a href=&amp;amp;quot;https://dummy.com/&amp;amp;quot;&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;a href=&amp;amp;quot;https://dummy.com/&amp;amp;quot;&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;aliquet tortor condimentum&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/a&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/a&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>Maecenas hendrerit et odio non tincidunt.<ph>&lt;mq:rxt displaytext="&amp;lt;br&amp;gt;" val="&amp;lt;br&amp;gt;" /&gt;</ph>Vivamus nec <bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>feugiat nibh<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept>, sit amet posuere sem.</seg></tuv>
+    <tuv xml:lang="ja">
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>マエケナスヘンドレリトエトオディオノンティンクントゥム。<ph>&lt;mq:rxt displaytext="&amp;lt;br&amp;gt;" val="&amp;lt;br&amp;gt;" /&gt;</ph>ヴィヴァムスネク<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>フェウギアトニブ<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept>、シトアメットポズエレセム。</seg></tuv>
+  </tu>
+  <tu changedate="20260131T191044Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="mq-role">Translator</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Maecenas hendrerit et odio non tincidunt.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;br&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;br&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Vivamus nec &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;feugiat nibh&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;, sit amet posuere sem.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Curabitur venenatis &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;vestibulum dui&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;, nec tincidunt enim ultrices eget.&lt;/seg&gt;</prop>
+      <seg>Ut varius nunc sit amet ex pulvinar, vel <bpt i="1">&lt;mq:rxt displaytext="&amp;lt;a href=&amp;quot;https://dummy.com/&amp;quot;&amp;gt;" val="&amp;lt;a href=&amp;quot;https://dummy.com/&amp;quot;&amp;gt;"&gt;</bpt>aliquet tortor condimentum<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/a&amp;gt;" val="&amp;lt;/a&amp;gt;"&gt;</ept>.<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+    <tuv xml:lang="ja">
+      <seg>ウトヴァリアスヌンクシトアメットエクスプルヴィナル、ヴェル<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;a href=&amp;quot;https://dummy。com/&amp;quot;&amp;gt;" val="&amp;lt;a href=&amp;quot;https://dummy。com/&amp;quot;&amp;gt;"&gt;</bpt>アリクエトトルトルコンディメントゥム<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/a&amp;gt;" val="&amp;lt;/a&amp;gt;"&gt;</ept>。<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+  </tu>
+  <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;Ut varius nunc sit amet ex pulvinar, vel &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;a href=&amp;amp;quot;https://dummy.com/&amp;amp;quot;&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;a href=&amp;amp;quot;https://dummy.com/&amp;amp;quot;&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;aliquet tortor condimentum&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/a&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/a&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;Morbi in ante eget turpis dignissim interdum in vel est.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>Curabitur venenatis <bpt i="1">&lt;mq:rxt displaytext="&amp;lt;i&amp;gt;" val="&amp;lt;i&amp;gt;"&gt;</bpt>vestibulum dui<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/i&amp;gt;" val="&amp;lt;/i&amp;gt;"&gt;</ept>, nec tincidunt enim ultrices eget.</seg></tuv>
+    <tuv xml:lang="ja">
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>クラビトゥルヴェネナティス<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;i&amp;gt;" val="&amp;lt;i&amp;gt;"&gt;</bpt>ヴェスティブラムドゥイ<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/i&amp;gt;" val="&amp;lt;/i&amp;gt;"&gt;</ept>、ネクティンクントエニムウルトリケスエゲト。</seg></tuv>
+  </tu>
+  <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Curabitur venenatis &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;vestibulum dui&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;, nec tincidunt enim ultrices eget.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Integer tempus rutrum aliquet. &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Maecenas ac mi ligula&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;.&lt;/seg&gt;</prop>
+      <seg>Morbi in ante eget turpis dignissim interdum in vel est.<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+    <tuv xml:lang="ja">
+      <seg>モルビインアンテエゲトトゥルピスディグニッシムインテルドゥムインヴェルエスト。<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+  </tu>
+  <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;Morbi in ante eget turpis dignissim interdum in vel est.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;Nullam sagittis vehicula vulputate.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;br&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;br&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Proin id turpis sit amet nisi dictum tincidunt.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>Integer tempus rutrum aliquet. <bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>Maecenas ac mi ligula<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept>.</seg></tuv>
+    <tuv xml:lang="ja">
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>インテゲルテンプスルトゥルムアリクエト。<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>マエケナスアクミリグラ<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept>。</seg></tuv>
+  </tu>
+  <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Integer tempus rutrum aliquet. &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Maecenas ac mi ligula&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Quisque vel ante ornare, &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;sollicitudin nisi nec&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;, scelerisque nulla.&lt;/seg&gt;</prop>
+      <seg>Nullam sagittis vehicula vulputate.<ph>&lt;mq:rxt displaytext="&amp;lt;br&amp;gt;" val="&amp;lt;br&amp;gt;" /&gt;</ph>Proin id turpis sit amet nisi dictum tincidunt.<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+    <tuv xml:lang="ja">
+      <seg>ヌルラムサジッティスヴェヒクラヴルプタテ。<ph>&lt;mq:rxt displaytext="&amp;lt;br&amp;gt;" val="&amp;lt;br&amp;gt;" /&gt;</ph>プロインイドトゥルピスシトアメットニシディクトゥムティンクントゥム。<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+  </tu>
+  <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;Nullam sagittis vehicula vulputate.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;br&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;br&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Proin id turpis sit amet nisi dictum tincidunt.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;Donec diam ligula, ultrices vel ante sed, dapibus scelerisque ipsum.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>Quisque vel ante ornare, <bpt i="1">&lt;mq:rxt displaytext="&amp;lt;i&amp;gt;" val="&amp;lt;i&amp;gt;"&gt;</bpt>sollicitudin nisi nec<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/i&amp;gt;" val="&amp;lt;/i&amp;gt;"&gt;</ept>, scelerisque nulla.</seg></tuv>
+    <tuv xml:lang="ja">
+      <seg><it pos="begin">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</it>クイスクエヴェルアンテオルナレ、<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;i&amp;gt;" val="&amp;lt;i&amp;gt;"&gt;</bpt>ソリキトゥディンニシネク<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/i&amp;gt;" val="&amp;lt;/i&amp;gt;"&gt;</ept>、スケレリスクエヌラ。</seg></tuv>
+  </tu>
+  <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Quisque vel ante ornare, &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;sollicitudin nisi nec&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/i&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;, scelerisque nulla.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;Ut laoreet, velit a fringilla venenatis, justo est rutrum quam, eget &lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;scelerisque enim&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/b&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt; odio ut leo.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <seg>Donec diam ligula, ultrices vel ante sed, dapibus scelerisque ipsum.<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+    <tuv xml:lang="ja">
+      <seg>ドネクディアムリグラ、ウルトリケスヴェルアンテセド、ダピブススケレリスクエイプスム。<it pos="end">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</it></seg></tuv>
+  </tu>
+  <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">aaa.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;Donec diam ligula, ultrices vel ante sed, dapibus scelerisque ipsum.&lt;ph&gt;&amp;lt;mq:rxt displaytext=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; val=&amp;quot;&amp;amp;lt;/p&amp;amp;gt;&amp;quot; /&amp;gt;&lt;/ph&gt;&lt;/seg&gt;</prop>
+      <seg><bpt i="2">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</bpt>Ut laoreet, velit a fringilla venenatis, justo est rutrum quam, eget <bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>scelerisque enim<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept> odio ut leo.<ept i="2">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</ept></seg></tuv>
+    <tuv xml:lang="ja">
+      <seg><bpt i="2">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</bpt>ウトラオレエト、ヴェリトアフリンギラヴェネナティス、ジュストエストルトゥルムクアム、エゲト<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>スケレリスクエエニム<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept>オディオウトレオ。<ept i="2">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</ept></seg></tuv>
+  </tu>
+</body>
+</tmx>

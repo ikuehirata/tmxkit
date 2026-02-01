@@ -1,14 +1,16 @@
 """Writing utilities (streaming)."""
 
+import logging
+import os
+import tempfile
+import time
 import warnings
+from collections import OrderedDict
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import BinaryIO, Callable, Iterable
 
 import lxml.etree as etree
-
-from ..errors import StreamError
-from .reader import read_header_only
 
 
 def is_tmx_header(elem: etree.Element) -> bool:
@@ -70,142 +72,327 @@ def _write_header(header: etree.Element | None, out_f: BinaryIO) -> None:
     out_f.write(b'<body>\n')
 
 
-def _write_footter(out_f: BinaryIO) -> None:
-    """Write the TMX footer (closing body and tmx tags) to the output.
-
-    Note: function name intentionally contains a typo to match original
-    implementation (``_write_footter``).
-    """
+def _write_footer(out_f: BinaryIO) -> None:
+    """Write the TMX footer (closing body and tmx tags)."""
     out_f.write(b'</body>\n')
     out_f.write(b'</tmx>\n')
 
 
-def write_from_root(
-        input_path: str | Path, final_path: str | Path, tu_processor: Callable) -> None:
-    """Write a TMX file from an XML root, applying ``tu_processor`` to each TU.
-
-    Parameters
-    ----------
-    input_path : str | pathlib.Path
-        Source file path.
-    final_path : str | pathlib.Path
-        Destination file path.
-    tu_processor : callable
-        A function that accepts a TU element and returns a processed TU.
-
-    Notes
-    -----
-    - Output is written in binary mode. If no TUs are written, the
-      implementation may fallback to writing an empty TMX.
-    """
-    warnings.warn(
-        '⚠️ write_from_root is deprecated. Please update your code accordingly.',
-        DeprecationWarning)
-
-    from ..pipeline.apply import apply
-    from .reader import stream_tu
-    # applyを使って tu_processor を TU ストリームに適用する
-    tu_stream = stream_tu(input_path)
-    tu_stream = apply(tu_stream, tu_processor)
-
-    try:
-        _ = write_tu_stream(
-            tu_stream=tu_stream,
-            header_root=read_header_only(Path(input_path)),
-            final_path=Path(final_path)
-        )
-    except Exception as e:
-        raise StreamError(f'Failed to write TMX from root: {input_path} -> {final_path}') from e
-
-
-def write_from_roots(
-        input_paths: Iterable[str | Path],
-        final_path: str | Path,
-        tu_processor: Callable) -> None:
-    """Write multiple XML roots into a single TMX file.
-
-    Parameters
-    ----------
-    input_paths : Iterable[str | Path]
-        Iterable of source file paths.
-    final_path : str | Path
-        Destination file path.
-    tu_processor : Callable
-        Function that processes each TU and returns a TU or ``None``.
-
-    """
-    warnings.warn(
-        '⚠️ write_from_roots is deprecated. Please update your code accordingly.',
-        DeprecationWarning)
-
-    import itertools
-
-    from ..pipeline.apply import apply
-    from .merger import merge_streams
-    from .reader import stream_tu
-
-    # イテレータを使って先頭ファイルを取り出し、全体は逐次処理する（メモリ節約）
-    it = iter(input_paths)
-    first = next(it, None)
-    if first is None:
-        return
-
-    # input_paths からストリームを統合
-    # 各入力を逐次 stream_tu に変換して merge_streams に渡す
-    merged_tu_stream = merge_streams(*(stream_tu(p) for p in itertools.chain([first], it)))
-    merged_tu_stream = apply(merged_tu_stream, tu_processor)
-
-    # ヘッダは最初のファイルから取得
-    header_root = read_header_only(Path(first))
-    try:
-        _ = write_tu_stream(
-            tu_stream=merged_tu_stream,
-            header_root=header_root,
-            final_path=Path(final_path)
-        )
-    except Exception as e:
-        raise StreamError(
-            f'Failed to write TMX from roots: {input_paths} -> {final_path}') from e
-
-
 def write_tu_stream(
     tu_stream: Iterable[etree.Element],
-    header_root: etree.Element,
-    final_path: Path,
+    header_path: Path | None,
+    out_path: Path,
 ) -> int:
-    """Write a TMX file from a stream of TUs.
+    """Write a TMX file from a stream of `<tu>` elements.
 
     Parameters
     ----------
     tu_stream : Iterable[etree.Element]
-        An iterable of TU elements.
-    header_root : etree.Element
-        Root element containing header information for the output TMX.
-    final_path : pathlib.Path
-        Destination file path.
+        An iterator of TU elements.
+    header_path : pathlib.Path or None
+        Path to a TMX file whose `<header>` will be used for output. If
+        ``None``, a default header will be generated.
+    out_path : pathlib.Path
+        Destination file path for the output TMX.
 
     Returns
     -------
     int
-        The number of TUs written.
-
-    Notes
-    -----
-    - Output is written in binary mode. If no TUs are written, the
-      implementation may create an empty TMX file.
+        Number of TUs written.
     """
-    tu_count = 0
-    final_path.parent.mkdir(parents=True, exist_ok=True)
-
-    with open(final_path, 'wb') as out_f:
-        _write_header(header_root, out_f)
-
+    # Delegate to TMXWriter for incremental/buffered writing.
+    writer = TMXWriter(path=out_path, header_path=header_path)
+    try:
         for tu in tu_stream:
             if tu is None:
                 continue
-            out_f.write(etree.tostring(tu, encoding='utf-8'))
-            tu_count += 1
+            writer.append(tu)
+    finally:
+        writer.finalize()
 
-        _write_footter(out_f)
+    return writer.count
 
-    return tu_count
+
+def init_tmx_file(path: Path, header: etree.Element | None = None) -> None:
+    """Write TMX prolog and opening `<body>` to ``path``.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        Destination file path.
+    header : etree.Element or None
+        Header element to use for the output; if ``None``, a default
+        header will be created.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, 'wb') as out_f:
+        _write_header(header, out_f)
+
+
+def append_tu_bytes(path: Path, data: bytes) -> None:
+    """Append TU bytes to the specified file.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        Destination file path.
+    data : bytes
+        Byte sequence to append (typically ``etree.tostring(tu, encoding='utf-8')``).
+    """
+    with open(path, 'ab') as out_f:
+        out_f.write(data)
+        out_f.flush()
+
+
+def finalize_tmx_file(path: Path) -> None:
+    """Write TMX footer (closing tags) to the specified file.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        Target file path.
+    """
+    with open(path, 'ab') as out_f:
+        _write_footer(out_f)
+
+
+class TMXWriter:
+    """Writer for appending TUs to a single TMX output file.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        Destination file path.
+    header_path : pathlib.Path | None
+        Path to a TMX file providing the `<header>` for output. If ``None``,
+        a default header will be used.
+    buffer_size : int
+        Internal buffer threshold (number of TUs) before flushing to disk.
+    """
+
+    def __init__(
+        self, path: Path,
+        header_path: Path | None = None,
+        buffer_size: int = 200,
+        logger: logging.Logger | None = None
+    ):
+        """Initialize the TMXWriter.
+
+        Parameters
+        ----------
+        path : pathlib.Path
+            Destination file path.
+        header_path : pathlib.Path | None
+            Path to a TMX file providing the `<header>` for output.
+        buffer_size : int
+            Internal buffer threshold (number of TUs).
+        logger : logging.Logger | None
+            Optional logger.
+        """
+        self.path = Path(path)
+        self._header_path = Path(header_path) if header_path is not None else None
+        self.header: etree.Element | None = None
+        self.buffer_size = int(buffer_size)
+        self._buffer: list[bytes] = []
+        self._initialized = False
+        self._finalized = False
+        self._count = 0
+        self.logger = logger or logging.getLogger(__name__)
+
+    def _ensure_init(self) -> None:
+        """Ensure writer is initialized (create file and write header)."""
+        if not self._initialized:
+            # resolve header element from path if provided
+            if self._header_path is not None:
+                try:
+                    from .reader import read_header_only
+                    self.header = read_header_only(self._header_path)
+                except Exception:
+                    # fallback to None -> default header
+                    self.header = None
+
+            init_tmx_file(self.path, self.header)
+            self._initialized = True
+
+    def append(self, tu: etree.Element) -> None:
+        """Append a TU element to the internal buffer.
+
+        If the buffer reaches `buffer_size` the buffer is flushed to disk.
+        """
+        if self._finalized:
+            raise RuntimeError('attempt to append to finalized writer')
+
+        self._ensure_init()
+        # 遅延 import で循環を避ける
+        from .serializer import serialize_tu
+        data = serialize_tu(tu)
+        self._buffer.append(data)
+        self._count += 1
+
+        if len(self._buffer) >= self.buffer_size:
+            self.flush()
+
+    def flush(self) -> None:
+        """Flush the internal buffer to disk atomically."""
+        if not self._buffer:
+            return
+
+        data = b''.join(self._buffer)
+        tmp_fd, tmp_path = tempfile.mkstemp(prefix=self.path.name + '.', dir=str(self.path.parent))
+        os.close(tmp_fd)
+
+        try:
+            if self.path.exists():
+                with open(self.path, 'rb') as f:
+                    existing = f.read()
+            else:
+                existing = b''
+
+            with open(tmp_path, 'wb') as tf:
+                tf.write(existing)
+                tf.write(data)
+
+            os.replace(tmp_path, str(self.path))
+            self._buffer = []
+        except Exception:
+            ts = int(time.time())
+            failed = self.path.with_name(self.path.name + f'.failed-{ts}')
+            try:
+                os.replace(tmp_path, str(failed))
+            except Exception:
+                try:
+                    os.remove(tmp_path)
+                except Exception:
+                    pass
+            self.logger.exception('flush failed for %s, moved to %s', self.path, failed)
+            raise
+
+    def finalize(self) -> None:
+        """Write footer and finalize the output file."""
+        if self._finalized:
+            return
+        try:
+            self.flush()
+        finally:
+            try:
+                finalize_tmx_file(self.path)
+            except Exception:
+                self.logger.exception('failed to write footer for %s', self.path)
+            self._finalized = True
+
+    def close(self) -> None:
+        """Close the writer (alias for ``finalize()``)."""
+        self.finalize()
+
+    @property
+    def count(self) -> int:
+        """Return the total number of TUs written."""
+        return self._count
+
+
+class WriterRouter:
+    """Router that manages `Path -> TMXWriter` mapping with LRU eviction.
+
+    Controls the number of open writers via ``max_writers``.
+    """
+
+    def __init__(
+        self,
+        writer_factory: Callable[[Path], TMXWriter],
+        max_writers: int = 100
+    ):
+        """Initialize the router.
+
+        Parameters
+        ----------
+        writer_factory : Callable[[Path], TMXWriter]
+            Factory to create `TMXWriter` instances for a given path.
+        max_writers : int
+            Maximum number of concurrently open writers.
+        """
+        self.writer_factory = writer_factory
+        self.max_writers = int(max_writers)
+        self._map: OrderedDict[Path, TMXWriter] = OrderedDict()
+
+    def get_or_create(self, out_path: Path) -> TMXWriter:
+        """Get or create a `TMXWriter` for ``out_path``.
+
+        If the router has reached ``max_writers`` the least-recently-used
+        writer is finalized and closed.
+        """
+        out_path = Path(out_path)
+        writer = self._map.get(out_path)
+        if writer is not None:
+            self._map.move_to_end(out_path)
+            return writer
+
+        if self.max_writers and len(self._map) >= self.max_writers:
+            oldest_path, oldest_writer = self._map.popitem(last=False)
+            try:
+                oldest_writer.finalize()
+            except Exception:
+                pass
+
+        writer = self.writer_factory(out_path)
+        self._map[out_path] = writer
+        return writer
+
+    def flush_all(self) -> None:
+        """Flush all managed writers."""
+        for writer in list(self._map.values()):
+            try:
+                writer.flush()
+            except Exception:
+                pass
+
+    def close_all(self) -> None:
+        """Close all managed writers and clear the router."""
+        for writer in list(self._map.values()):
+            try:
+                writer.close()
+            except Exception:
+                pass
+        self._map.clear()
+
+
+def _sanitize_filename(name: str) -> str:
+    import re
+    name = (name or '').strip()
+    return re.sub(r'[^0-9A-Za-z._-]', '_', name)
+
+
+def default_output_resolver(key: str, base_dir: Path, ext: str = '.tmx') -> Path:
+    """Default resolver: produce a safe output filename for ``key``.
+
+    Non-alphanumeric characters are replaced with underscore.
+    """
+    safe = _sanitize_filename(key)
+    return Path(base_dir) / f'{safe}{ext}'
+
+
+def default_writer_factory(
+    base_dir: Path,
+    header_path: Path | None = None,
+    buffer_size: int = 200
+) -> Callable[[Path], TMXWriter]:
+    """Return a default factory function that produces ``TMXWriter`` instances.
+
+    The returned factory will resolve relative output paths against ``base_dir``.
+
+    Parameters
+    ----------
+    base_dir : pathlib.Path
+        Base directory used to resolve relative output paths.
+    header_path : pathlib.Path or None
+        Path to a TMX file whose ``<header>`` will be used for output. If
+        ``None``, a default header will be generated.
+    buffer_size : int
+        Internal buffer threshold (number of TUs) for created ``TMXWriter``.
+    """
+    def factory(out_path: Path) -> TMXWriter:
+        p = Path(out_path)
+        if not p.is_absolute():
+            p = Path(base_dir) / p
+        return TMXWriter(p, header_path=header_path, buffer_size=buffer_size)
+
+    return factory

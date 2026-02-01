@@ -16,7 +16,6 @@ from ..errors import InvalidTUError, StreamError, TmxkitError, TmxParseError
 from .merger import merge_streams
 from .reader import read_header_only, stream_tu
 from .serializer import serialize_tu
-from .splitter import split_stream
 from .writer import (
     write_tu_stream,
 )
@@ -26,6 +25,5 @@ __all__ = [
     'write_tu_stream',
 	'serialize_tu',
     'merge_streams',
-    'split_stream',
     'TmxkitError', 'TmxParseError', 'InvalidTUError', 'StreamError',
 ]

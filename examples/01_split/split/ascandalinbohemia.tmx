@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE tmx SYSTEM "tmx14.dtd">
+<tmx version="1.4">
+<header creationtool="MemoQ" creationtoolversion="11.6.8" segtype="sentence" adminlang="en-us" creationid="user" srclang="en" o-tmf="MemoQTM" datatype="unknown">
+  <prop type="defclient"> </prop>
+  <prop type="defproject"> </prop>
+  <prop type="defdomain"> </prop>
+  <prop type="defsubject"> </prop>
+  <prop type="description"> </prop>
+  <prop type="targetlang">ja</prop>
+  <prop type="name">mixed</prop>
+</header>
+<body>
+<tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-post">&lt;seg&gt;I have seldom heard him mention her under any other name.&lt;/seg&gt;</prop>
+      <seg>To Sherlock Holmes she is always the woman.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>シャーロック・ホームズにとって、彼女はいつも『かの女』であった。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;To Sherlock Holmes she is always the woman.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;In his eyes she eclipses and predominates the whole of her sex.&lt;/seg&gt;</prop>
+      <seg>I have seldom heard him mention her under any other name.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>他の呼称などつゆほども聞かない。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;I have seldom heard him mention her under any other name.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;It was not that he felt any emotion akin to love for Irene Adler.&lt;/seg&gt;</prop>
+      <seg>In his eyes she eclipses and predominates the whole of her sex.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>彼女の前ではどんな女性も影を潜める、とでも考えているのであろう。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;In his eyes she eclipses and predominates the whole of her sex.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind.&lt;/seg&gt;</prop>
+      <seg>It was not that he felt any emotion akin to love for Irene Adler.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>だがアイリーン・アドラーに恋慕の情といったものを抱いているのではない。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;It was not that he felt any emotion akin to love for Irene Adler.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position.&lt;/seg&gt;</prop>
+      <seg>All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>あらゆる情、とりわけ恋というものは、ホームズの精神にとっては、到底受け入れることができない。精神を冷徹で狂いなく、それでいて偏りがまったくないままに保たねばならないからだ。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;He never spoke of the softer passions, save with a gibe and a sneer.&lt;/seg&gt;</prop>
+      <seg>He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>個人的な考えだが、推理と観察にかけて、ホームズは世界一の完全無欠な機械である。けれども恋愛向きではない。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;They were admirable things for the observer—excellent for drawing the veil from men’s motives and actions.&lt;/seg&gt;</prop>
+      <seg>He never spoke of the softer passions, save with a gibe and a sneer.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>斜に構えねば、人の情については語れない。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;He never spoke of the softer passions, save with a gibe and a sneer.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;But for the trained reasoner to admit such intrusions into his own delicate and finely adjusted temperament was to introduce a distracting factor which might throw a doubt upon all his mental results.&lt;/seg&gt;</prop>
+      <seg>They were admirable things for the observer—excellent for drawing the veil from men’s motives and actions.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>観察にはもってこいだ――情こそが人の動機や行動のヴェールをはぎ取る。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;They were admirable things for the observer—excellent for drawing the veil from men’s motives and actions.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;Grit in a sensitive instrument, or a crack in one of his own high-power lenses, would not be more disturbing than a strong emotion in a nature such as his.&lt;/seg&gt;</prop>
+      <seg>But for the trained reasoner to admit such intrusions into his own delicate and finely adjusted temperament was to introduce a distracting factor which might throw a doubt upon all his mental results.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>だが、とぎすまされた推理の場合、ひとたびそのようなものが厳密に調整された心に入りこめば、乱す種となってしまう。そうすればどんな思考の結果も疑わしい。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;But for the trained reasoner to admit such intrusions into his own delicate and finely adjusted temperament was to introduce a distracting factor which might throw a doubt upon all his mental results.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;And yet there was but one woman to him, and that woman was the late Irene Adler, of dubious and questionable memory.&lt;/seg&gt;</prop>
+      <seg>Grit in a sensitive instrument, or a crack in one of his own high-power lenses, would not be more disturbing than a strong emotion in a nature such as his.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>精密機器に砂が混入することよりも、所持する高性能の拡大鏡にひびが入ることよりも、ホームズのような心に強い情緒が芽生えることの方が、悩ましいことなのである。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T141931Z" creationdate="20260131T141931Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">ascandalinbohemia.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;Grit in a sensitive instrument, or a crack in one of his own high-power lenses, would not be more disturbing than a strong emotion in a nature such as his.&lt;/seg&gt;</prop>
+      <seg>And yet there was but one woman to him, and that woman was the late Irene Adler, of dubious and questionable memory.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>だがそんなホームズにも、ひとりだけ女性というものがあった。その女こそ、かつてのアイリーン・アドラー、まことしやかな噂の多い女だ。</seg>
+    </tuv>
+  </tu>
+  </body>
+</tmx>

@@ -66,8 +66,8 @@ tu_stream = apply(tu_stream, process_tu)
 
 write_tu_stream(
   tu_stream=tu_stream,
-  header_root=read_header_only(Path(input_path)),
-  final_path=Path(output_path),
+  header_path=Path(input_path),
+  out_path=Path(output_path),
 )
 ```
 
@@ -88,6 +88,40 @@ Those responsibilities should be handled by higher-level projects.
 - Custom tools that convert TMX into other formats
 
 tmxkit's role is to safely stream TMX data without imposing processing decisions.
+
+## Sources of Original Texts in `examples/`
+
+The original text files included in the `examples/` directory are derived from **public-domain sources** listed below.
+They are provided solely as sample data for demonstrating and testing the functionality of **tmxkit**.
+
+### Sherlock Holmes (A Scandal in Bohemia)
+
+* **English original text**  
+  Project Gutenberg  
+  *The Adventures of Sherlock Holmes*  
+  “A Scandal in Bohemia”  
+  [https://www.gutenberg.org/files/1661/1661-h/1661-h.htm#chap01](https://www.gutenberg.org/files/1661/1661-h/1661-h.htm#chap01)
+
+* **Japanese translation**  
+  Aozora Bunko  
+  “ボヘミアの醜聞”  
+  [https://www.aozora.gr.jp/cards/000009/files/226_31222.html](https://www.aozora.gr.jp/cards/000009/files/226_31222.html)
+
+### The Pillow Book
+
+* **English translation**  
+  *The Pillow-Book of Sei Shōnagon*  
+  translated by Arthur Waley (1928)  
+  Internet Archive  
+  [https://archive.org/stream/the-pillow-book/The%20Pillow%20Book_djvu.txt](https://archive.org/stream/the-pillow-book/The%20Pillow%20Book_djvu.txt)
+
+* **Japanese original text**  
+  Japanese Wikisource  
+  *The Pillow Book (Makura no Sōshi)*, Section 1  
+  [https://ja.wikisource.org/wiki/%E6%9E%95%E8%8D%89%E5%AD%90_(Wikisource)/%E7%AC%AC%E4%B8%80%E6%AE%B5](https://ja.wikisource.org/wiki/%E6%9E%95%E8%8D%89%E5%AD%90_%28Wikisource%29/%E7%AC%AC%E4%B8%80%E6%AE%B5)
+
+All texts listed above are believed to be in the public domain.
+They are included for demonstration purposes only, and no claim is made regarding translation accuracy or one-to-one alignment.
 
 ## Notes
 

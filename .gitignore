@@ -219,3 +219,5 @@ todo.md
 *code-workspace
 README_dev.md
 .vscode
+docs/_notes
+tests
