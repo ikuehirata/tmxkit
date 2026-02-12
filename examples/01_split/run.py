@@ -1,11 +1,11 @@
-"""`input.tmx` を読み取り、`<prop type="x-document">` の値ごとに TMX を分割保存する。
+"""Read `input.tmx` and split the TMX by the value of `<prop type="x-document">`.
 
-使い方::
+Usage::
 
     python run.py
 
-スクリプトは同ディレクトリの `input.tmx` を読み、分割結果を
-`split/` ディレクトリに `.tmx` ファイルとして出力する。
+The script reads `input.tmx` in the same directory and writes split TMX
+files into the `split/` subdirectory.
 """
 
 from __future__ import annotations
@@ -13,14 +13,16 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from tmxkit.io import stream_tu
+from tmxkit.io import parse_header, stream_tu
 from tmxkit.io.splitter_sink import consume_and_split
 
 
 def _classify_by_x_document(tu) -> str | None:
-    """`<prop type="x-document">` の値を取得し、拡張子を除いた文字列を分類キーとして返す。
+    """Return the value of ``<prop type="x-document">`` as a classification key.
 
-    見つからない場合は `None` を返し、その TU は分割対象から除外される。
+    The returned key is the prop value with its file extension removed. If
+    the property is not found, ``None`` is returned and the TU is excluded
+    from splitting.
     """
     prop = tu.find('prop[@type="x-document"]')
     if prop is None:
@@ -30,21 +32,23 @@ def _classify_by_x_document(tu) -> str | None:
 
 
 def main() -> None:
-    """エントリポイント。
+    """Entry point.
 
-    このファイルと同じディレクトリにある `input.tmx` を読み、
-    `<prop type="x-document">` の値ごとに分割して `split/` 配下に出力する。
+    Reads ``input.tmx`` in the same directory and splits it by the value of
+    ``<prop type="x-document">``, writing results under the ``split/``
+    subdirectory.
     """
     base = Path(__file__).parent
     input_path = base / 'input.tmx'
     out_dir = base / 'split'
 
+    tmx_header = parse_header(input_path)
     tu_stream = stream_tu(input_path)
 
     written = consume_and_split(
         input_stream=tu_stream,
         key_extractor=_classify_by_x_document,
-        header_path=input_path,
+        header_obj=tmx_header,
         base_dir=out_dir,
     )
     print(written)

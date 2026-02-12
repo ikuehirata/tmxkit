@@ -1,48 +1,51 @@
-"""テストランナー: `stream_tu` -> `pipeline.apply` -> `write_tu_stream` の流れで
+"""Test runner demonstrating: stream_tu -> pipeline.apply -> write_tu_stream.
 
-`tmxkit.tu.tags.replace_tags` を適用して出力する。
+Applies ``tmxkit.tu.prepare.run`` to each TU and writes the result.
 
-使い方:
+Usage::
+
     python run.py input.tmx output.tmx
 
-注: `tmxkit.io.writer.write_from_root` を使うと同等処理をまとめて実行できる。
+Note: ``tmxkit.io.writer.write_from_root`` can perform equivalent
+operations in a single helper call.
 """
 from __future__ import annotations
 
 from pathlib import Path
 
+from tmxkit.core.models import TMXHeader
 from tmxkit.io import stream_tu, write_tu_stream
 from tmxkit.pipeline.apply import apply
-from tmxkit.tu.tags import replace_tags
+from tmxkit.tu.prepare import run
 
 
 def main() -> int:
-    """実行エントリポイント。
+    """Entry point.
 
     Parameters
     ----------
     argv : list[str] | None
-        CLI 引数。None の場合 `sys.argv` を使用する。
+        CLI arguments. If None, `sys.argv` is used.
 
     Returns
     -------
     int
-        終了コード。
+        Exit code.
     """
     base = Path(__file__).parent
     input_path = base / 'input.tmx'
     output_path = base / 'output.tmx'
 
     # 1) stream_tu で TU ストリームを作成
+    header = TMXHeader.from_tmx_file(input_path)
     tu_stream = stream_tu(input_path)
 
-    # 2) pipeline.apply を使って replace_tags を適用
-    processed_stream = apply(tu_stream, replace_tags)
-
+    # 2) pipeline.apply を使って prepare.run を適用
+    processed_stream = apply(tu_stream, lambda tu: run(header, tu))
     # 3) write_tu_stream を使って出力（write_from_root を使っても良い）
     count = write_tu_stream(
         tu_stream=processed_stream,
-        header_path=input_path,
+        header_obj=header,
         out_path=output_path,
     )
 

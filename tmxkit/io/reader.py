@@ -5,22 +5,17 @@ from typing import Iterator
 
 import lxml.etree as etree
 
+from ..core.models import TMXHeader
 from ..errors import StreamError, TmxParseError
 
 
-def read_header_only(path: Path) -> etree.Element | None:
-    """Read and return only the ``<header>`` element from a TMX file."""
-    for event, elem in etree.iterparse(
-        str(path),
-        events=('end',),
-        tag='header',
-        recover=True,
-        huge_tree=True,
-    ):
-        # header を見つけた瞬間に返す
-        return elem
+def parse_header(path: Path) -> TMXHeader:
+    """Read the ``<header>`` element from a TMX file and return a ``TMXHeader``.
 
-    return None
+    This is a thin helper around ``TMXHeader.from_tmx_file`` for convenience.
+    """
+    header = TMXHeader.from_tmx_file(path)
+    return header
 
 
 def stream_tu(input_file: str | Path) -> Iterator[etree.Element]:

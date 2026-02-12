@@ -1,10 +1,21 @@
 """Utilities for working with ``<seg>`` / ``<tuv>`` elements."""
 
 import re
+from typing import Literal
 
 import lxml.etree as etree
 
 from ..errors import InvalidTUError
+
+SEGMENTS = Literal[
+    'source',
+    'target',
+]
+
+_ALLOWED_SEGMENTS: set[str] = {
+    'source',
+    'target',
+}
 
 
 def get_segment(tu: etree.Element, lang_code: str) -> etree.Element | None:
@@ -34,28 +45,28 @@ def get_segment(tu: etree.Element, lang_code: str) -> etree.Element | None:
     return None
 
 
-def get_lang_text(tu: etree.Element, lang_code: str) -> str | None:
-    """Get the inner XML text of the ``<seg>`` for the given language code.
+def get_text(
+    segment: etree.Element
+) -> str | None:
+    """Return the inner XML of a ``<seg>`` element as a string.
 
     Parameters
     ----------
-    tu : etree.Element
-        The ``<tu>`` element.
-    lang_code : str
-        Language code (e.g. 'en', 'ja').
+    segment : etree.Element
+        The ``<seg>`` element to extract inner XML from.
 
     Returns
     -------
     str | None
-        The inner XML of the ``<seg>`` element. Returns ``None`` if the
-        requested language is not present.
+        The inner XML of the ``<seg>`` element, or ``None`` if the
+        provided segment is ``None``.
     """
-    seg = get_segment(tu, lang_code)
-    if seg is None:
-        raise InvalidTUError(f'<seg> not found for lang: {lang_code}')
+    # segment が None の場合は None を返す（呼び出し側で処理する）
+    if segment is None:
+        return None
 
     # 安全のため seg 全体を文字列化して外側の <seg> タグを剥がす
-    seg_str = etree.tostring(seg, encoding='unicode')
+    seg_str = etree.tostring(segment, encoding='unicode')
     # remove opening <seg ...> and closing </seg>
     inner = re.sub(r'^<seg[^>]*>', '', seg_str)
     inner = re.sub(r'</seg>', '', inner)
@@ -63,38 +74,35 @@ def get_lang_text(tu: etree.Element, lang_code: str) -> str | None:
     return inner
 
 
-def replace_lang_text(tu: etree.Element, lang_code: str, new_inner_xml: str) -> etree.Element:
-    """Replace the contents of the ``<seg>`` for a given language with new XML.
+def replace_text(
+    segment: etree.Element,
+    new_inner_xml: str
+) -> etree.Element:
+    """Replace the contents of a ``<seg>`` element with new inner XML.
 
     Parameters
     ----------
-    tu : etree.Element
-        The ``<tu>`` element.
-    lang_code : str
-        Language code (e.g. 'en', 'ja').
+    segment : etree.Element
+        The ``<seg>`` element to modify.
     new_inner_xml : str
         New XML string to insert inside the ``<seg>`` element.
 
     Returns
     -------
     etree.Element
-        The modified ``<tu>`` element.
+        The modified ``<seg>`` element.
     """
-    seg = get_segment(tu, lang_code)
-    if seg is None:
-        raise InvalidTUError(f'<seg> not found for lang: {lang_code}')
-
     # 既存の中身を全部消す
-    seg.clear()
+    segment.clear()
 
     # ダミールートで包んで再パース
     wrapper = etree.fromstring(f'<wrapper>{new_inner_xml}</wrapper>')
 
     # text
-    seg.text = wrapper.text
+    segment.text = wrapper.text
 
     # 子要素
     for child in wrapper:
-        seg.append(child)
+        segment.append(child)
 
-    return tu
+    return segment

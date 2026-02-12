@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE tmx SYSTEM "tmx14.dtd">
 <tmx version="1.4">
-<header creationtool="MemoQ" creationtoolversion="11.6.8" segtype="sentence" adminlang="en-us" creationid="user" srclang="en" o-tmf="MemoQTM" datatype="unknown">
-  <prop type="defclient"> </prop>
-  <prop type="defproject"> </prop>
-  <prop type="defdomain"> </prop>
-  <prop type="defsubject"> </prop>
-  <prop type="description"> </prop>
-  <prop type="targetlang">ja</prop>
-  <prop type="name">My translation memory</prop>
-</header>
-<body>
+<header creationtool="tmxkit" creationtoolversion="0.1.0"/><body>
 <tu changedate="20260131T181704Z" creationdate="20260131T181704Z" creationid="user" changeid="user">
     <prop type="client"> </prop>
     <prop type="project"> </prop>

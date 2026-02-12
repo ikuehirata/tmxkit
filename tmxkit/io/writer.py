@@ -12,6 +12,8 @@ from typing import BinaryIO, Callable, Iterable
 
 import lxml.etree as etree
 
+from tmxkit.core.models import TMXHeader
+
 
 def is_tmx_header(elem: etree.Element) -> bool:
     """Return True if ``elem`` is a TMX ``<header>`` element."""
@@ -24,6 +26,7 @@ def is_tmx_header(elem: etree.Element) -> bool:
 
 def make_default_header() -> etree.Element:
     """Create a default ``<header>`` element containing tmxkit version info."""
+    # TODO ヘッダインスタンス作成に変更する
     try:
         v = version('tmxkit')
     except PackageNotFoundError:
@@ -63,7 +66,6 @@ def _write_header(header: etree.Element | None, out_f: BinaryIO) -> None:
     # ヘッダが存在しない場合はデフォルトを作成
     if header is None:
         header = make_default_header()
-        # TODO 確認事項：srclang='en' は必要。そのままmemoQにインポートできる？
 
     # <header> を書き出す
     out_f.write(etree.tostring(header, encoding='utf-8'))
@@ -80,8 +82,9 @@ def _write_footer(out_f: BinaryIO) -> None:
 
 def write_tu_stream(
     tu_stream: Iterable[etree.Element],
-    header_path: Path | None,
     out_path: Path,
+    header_path: Path | None = None,
+    header_obj: TMXHeader | None = None,
 ) -> int:
     """Write a TMX file from a stream of `<tu>` elements.
 
@@ -90,8 +93,11 @@ def write_tu_stream(
     tu_stream : Iterable[etree.Element]
         An iterator of TU elements.
     header_path : pathlib.Path or None
-        Path to a TMX file whose `<header>` will be used for output. If
-        ``None``, a default header will be generated.
+        Path to a TMX file whose ``<header>`` should be used for output.
+        If ``None``, a default header is used.
+    header_obj : TMXHeader or None
+        Optional ``TMXHeader`` instance to use directly for output. If
+        provided, this takes precedence over ``header_path``.
     out_path : pathlib.Path
         Destination file path for the output TMX.
 
@@ -101,7 +107,11 @@ def write_tu_stream(
         Number of TUs written.
     """
     # Delegate to TMXWriter for incremental/buffered writing.
-    writer = TMXWriter(path=out_path, header_path=header_path)
+    writer = TMXWriter(
+        path=out_path,
+        header_path=header_path,
+        header_obj=header_obj
+    )
     try:
         for tu in tu_stream:
             if tu is None:
@@ -173,6 +183,7 @@ class TMXWriter:
     def __init__(
         self, path: Path,
         header_path: Path | None = None,
+        header_obj: TMXHeader | None = None,
         buffer_size: int = 200,
         logger: logging.Logger | None = None
     ):
@@ -183,14 +194,19 @@ class TMXWriter:
         path : pathlib.Path
             Destination file path.
         header_path : pathlib.Path | None
-            Path to a TMX file providing the `<header>` for output.
+            Path to a TMX file providing the ``<header>``. If ``None``, a
+            default header will be used.
+        header_obj : TMXHeader | None
+            Optional ``TMXHeader`` instance to use directly for output.
+            If provided, this takes precedence over ``header_path``.
         buffer_size : int
-            Internal buffer threshold (number of TUs).
+            Internal buffer threshold (number of TUs) before flushing.
         logger : logging.Logger | None
-            Optional logger.
+            Optional logger instance.
         """
         self.path = Path(path)
         self._header_path = Path(header_path) if header_path is not None else None
+        self._header_obj = header_obj
         self.header: etree.Element | None = None
         self.buffer_size = int(buffer_size)
         self._buffer: list[bytes] = []
@@ -205,11 +221,15 @@ class TMXWriter:
             # resolve header element from path if provided
             if self._header_path is not None:
                 try:
-                    from .reader import read_header_only
-                    self.header = read_header_only(self._header_path)
+                    from ..io.utils import get_header_xml
+                    self.header = get_header_xml(self._header_path)
                 except Exception:
                     # fallback to None -> default header
                     self.header = None
+            if self._header_obj is not None:
+                self.header = self._header_obj.generate_xtm
+            else:
+                self.header = None
 
             init_tmx_file(self.path, self.header)
             self._initialized = True
@@ -361,18 +381,16 @@ def _sanitize_filename(name: str) -> str:
     return re.sub(r'[^0-9A-Za-z._-]', '_', name)
 
 
-def default_output_resolver(key: str, base_dir: Path, ext: str = '.tmx') -> Path:
-    """Default resolver: produce a safe output filename for ``key``.
-
-    Non-alphanumeric characters are replaced with underscore.
-    """
+def default_output_resolver(key: str, ext: str = '.tmx') -> Path:
+    """Default resolver that maps a classification key to an output Path."""
     safe = _sanitize_filename(key)
-    return Path(base_dir) / f'{safe}{ext}'
+    return Path(f'{safe}{ext}')
 
 
 def default_writer_factory(
     base_dir: Path,
     header_path: Path | None = None,
+    header_obj: TMXHeader | None = None,
     buffer_size: int = 200
 ) -> Callable[[Path], TMXWriter]:
     """Return a default factory function that produces ``TMXWriter`` instances.
@@ -382,10 +400,12 @@ def default_writer_factory(
     Parameters
     ----------
     base_dir : pathlib.Path
-        Base directory used to resolve relative output paths.
-    header_path : pathlib.Path or None
-        Path to a TMX file whose ``<header>`` will be used for output. If
-        ``None``, a default header will be generated.
+        ベースディレクトリ。出力パスが相対の場合に結合される。
+    header_path : pathlib.Path | None
+        ヘッダを持つ TMX ファイルのパス（None の場合はデフォルトヘッダ）。
+    header_obj : TMXHeader | None
+        出力 TMX のヘッダ情報を直接指定する場合の `TMXHeader` インスタンス。
+        `None` の場合は `header_path` を使用する。
     buffer_size : int
         Internal buffer threshold (number of TUs) for created ``TMXWriter``.
     """
@@ -393,6 +413,6 @@ def default_writer_factory(
         p = Path(out_path)
         if not p.is_absolute():
             p = Path(base_dir) / p
-        return TMXWriter(p, header_path=header_path, buffer_size=buffer_size)
+        return TMXWriter(p, header_path=header_path, header_obj=header_obj, buffer_size=buffer_size)
 
     return factory

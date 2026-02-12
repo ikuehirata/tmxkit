@@ -14,16 +14,15 @@ This package re-exports common exceptions raised during I/O operations.
 
 from ..errors import InvalidTUError, StreamError, TmxkitError, TmxParseError
 from .merger import merge_streams
-from .reader import read_header_only, stream_tu
+from .reader import parse_header, stream_tu
 from .serializer import serialize_tu
-from .writer import (
-    write_tu_stream,
-)
+from .writer import write_tu_stream
 
 __all__ = [
-    'stream_tu', 'read_header_only',
+    'stream_tu', 'parse_header',
     'write_tu_stream',
 	'serialize_tu',
     'merge_streams',
     'TmxkitError', 'TmxParseError', 'InvalidTUError', 'StreamError',
+    'write_tu_stream',
 ]

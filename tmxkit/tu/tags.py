@@ -1,117 +1,51 @@
-"""タグ処理ユーティリティ群。"""
+"""Tag processing utilities.
+
+This module contains helper functions to detect and convert HTML-like
+tags within segment text into TMX-safe representations used by the toolchain.
+"""
 from __future__ import annotations
 
 import re
 from html import escape
 
-import lxml.etree as etree
-
-from ..errors import InvalidTUError
-from .segment import get_lang_text, replace_lang_text
-
-# 対象タグ群を開閉があるタグと単独（void/singleton）タグに分割
 # ペアタグは開始/終了の両方を処理する。単独タグは開始のみ処理する。
 PAIR_TAGS = [
     'a', 'b', 'i', 'u', 'strong', 'em',
     'span', 'div', 'font', 'p',
 ]
+'''開閉があるタグ'''
 
 SINGLETON_TAGS = [
     'br', 'hr', 'img',
 ]
-# 追加のタグがあれば各リストに追記する
+'''単独（void/singleton）タグ'''
 
 
-def replace_tags(tu: etree.Element) -> etree.Element:
-    """`tu` 内の source/target に対して平文タグ化→PH→BPT/EPT 変換を行う。
+def tagify_canonical_html(text: str) -> str:
+    """Convert pseudo-HTML tags like ``[p]``/``[/p]`` into ``ph``-style mq:rxt.
 
-    手順:
-    1. 指定言語のテキストを取得
-    2. `tagify_plain_html` を先に実行して平文タグを `ph` 化
-    3. `convert_ph_to_bptept` を適用して `ph` を `bpt`/`ept` に変換
-    4. 変換後のテキストで `seg` を置換して返す
+    This function is intended to transform canonical or pseudo-HTML
+    bracketed tags into the internal ``<ph>`` representation used by the
+    pipeline.
     """
-    # tu 内の <tuv xml:lang="..."> を読み取り、利用可能な言語コードを検出する
-    def _available_langs(tu_elem: etree.Element) -> list[str]:
-        langs: list[str] = []
-        for tuv in tu_elem.findall('tuv'):
-            lang = tuv.get('{http://www.w3.org/XML/1998/namespace}lang')
-            if lang:
-                langs.append(lang.lower())
-        return langs
-
-    def _choose_source_target(langs: list[str]) -> tuple[str | None, str | None]:
-        # 優先候補
-        src_candidates = ['en-us', 'en']
-        tgt_candidates = ['ja', 'ja-jp']
-
-        src = next((c for c in src_candidates if c in langs), None)
-        tgt = next((c for c in tgt_candidates if c in langs), None)
-
-        # 部分一致（例: en-GB など）
-        if src is None:
-            src = next((c for c in langs if c.startswith('en')), None)
-        if tgt is None:
-            tgt = next((c for c in langs if c.startswith('ja')), None)
-
-        # フォールバック: 2 つ以上の言語があれば順に割り当て
-        if src is None or tgt is None:
-            if len(langs) >= 2:
-                # 既に片方見つかっていれば、もう片方は別言語を採用
-                if src is None and tgt is not None:
-                    src = next((lang for lang in langs if lang != tgt), None)
-                elif tgt is None and src is not None:
-                    tgt = next((lang for lang in langs if lang != src), None)
-                else:
-                    src, tgt = langs[0], langs[1]
-            else:
-                # 言語が1つしかなければ処理しない
-                return None, None
-
-        return src, tgt
-
-    langs = _available_langs(tu)
-    source_lang, target_lang = _choose_source_target(langs)
-    if source_lang is None or target_lang is None:
-        return tu
-
-    try:
-        source = get_lang_text(tu, source_lang)
-        target = get_lang_text(tu, target_lang)
-    except InvalidTUError:
-        return tu
-
-    if source is None or target is None:
-        return tu
-
-    # 1) 平文タグ化
-    src_tagged = tagify_plain_html(source)
-    tgt_tagged = tagify_plain_html(target)
-
-    # 2) PH -> BPT/EPT 変換
-    src_converted = convert_ph_to_bptept(src_tagged)
-    tgt_converted = convert_ph_to_bptept(tgt_tagged)
-
-    # 置換
-    tu = replace_lang_text(tu, source_lang, src_converted)
-    tu = replace_lang_text(tu, target_lang, tgt_converted)
-
-    return tu
+    # TODO 実装
+    raise NotImplementedError('tagify_canonical_html is not implemented yet')
 
 
 def tagify_plain_html(text: str) -> str:
-    """平文に残る明らかな HTML タグ（例: <br>）を `ph` 形式の mq:rxt に変換する。
+    """Convert obvious HTML tags into ``ph``-style mq:rxt placeholders.
 
     Parameters
     ----------
     text : str
-        セグメントのテキスト。
+        Segment text to process.
 
     Returns
     -------
     str
-        変換後のテキスト。
+        The transformed text with ``<ph>`` placeholders inserted.
     """
+
     def _to_ph_from_raw(raw: str) -> str:
         # raw は '<a href="...">' または '&lt;a href=&quot;...&quot;&gt;' のような形
         # displaytext / val に入れる値は1回だけエスケープする
@@ -167,9 +101,10 @@ def tagify_plain_html(text: str) -> str:
 
 
 def find_ph_mq_rxt_tags(text: str) -> list[re.Match]:
-    """`ph` 内の `mq:rxt` 要素を順序付きで全て返す。
+    """Return all ``mq:rxt`` elements inside ``<ph>`` tags in order.
 
-    戻り値は re.Match のリストで、`displaytext` を group 'disp' で取り出せる。
+    Returns a list of ``re.Match`` objects where the ``displaytext`` value
+    is available in group ``'disp'``.
     """
     # ph>&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;" /&gt;</ph>
     pattern = re.compile(r'<ph>\s*&lt;mq:rxt[^>]*displaytext="(?P<disp>.*?)"[^>]*/&gt;\s*</ph>')
@@ -177,7 +112,13 @@ def find_ph_mq_rxt_tags(text: str) -> list[re.Match]:
 
 
 def convert_ph_to_bptept(text: str) -> str:
-    """`ph` 内の mq:rxt 表現で開始/終了タグに相当するものを `bpt`/`ept` に置換する。"""
+    """Replace mq:rxt representations inside ``<ph>`` with ``bpt``/``ept``.
+
+    This function scans ``<ph>`` elements containing ``mq:rxt`` displaytext
+    values and converts matching start/end tag pairs to ``<bpt>``/``<ept>``
+    constructs. Unmatched paragraph-like tags are converted to ``<it>``
+    with appropriate ``pos`` attribute.
+    """
     if '<ph>' not in text:
         return text
 

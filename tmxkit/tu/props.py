@@ -5,11 +5,11 @@ import lxml.etree as etree
 from ..errors import InvalidTUError
 
 
-def extract_props(tu) -> dict[str, str]:
-    """Extract ``<prop>`` tags from a ``<tu>`` element and return them as a dict.
+def extract_props(tu: etree.Element) -> dict[str, str]:
+    """Extract all ``<prop>`` elements from a ``<tu>`` and return a dict.
 
-    The returned dictionary maps the ``type`` attribute of each ``<prop>`` to
-    its text content.
+    The returned dictionary maps the ``type`` attribute of each ``<prop>``
+    to its text content (empty string if none).
     """
     if tu is None or not hasattr(tu, 'findall'):
         raise InvalidTUError('extract_props expects a tu element')
@@ -22,22 +22,11 @@ def extract_props(tu) -> dict[str, str]:
     return props
 
 
-def get_prop_value(tu, prop_type: str, ignore_linebreak=True) -> str | None:
-    """Get the value of a specific ``<prop>`` tag inside a TU.
+def get_prop_value(tu: etree.Element, prop_type: str, ignore_linebreak=True) -> str | None:
+    """Return the value of a named ``<prop>`` within a ``<tu>``.
 
-    Parameters
-    ----------
-    tu : etree.Element
-        The ``<tu>`` element.
-    prop_type : str
-        The ``type`` attribute value to look for.
-    ignore_linebreak : bool, optional
-        If True (default), line breaks are removed from the returned value.
-
-    Returns
-    -------
-    str | None
-        The value of the requested ``<prop>`` tag, or ``None`` if not found.
+    If ``ignore_linebreak`` is True, line breaks are removed from the
+    returned value.
     """
     if tu is None or not hasattr(tu, 'findall'):
         raise InvalidTUError('get_prop_value expects a tu element')
@@ -55,11 +44,11 @@ def get_prop_value(tu, prop_type: str, ignore_linebreak=True) -> str | None:
     return None
 
 
-def replace_prop_value(tu, prop_type: str, new_value: str) -> etree.Element:
-    """Replace or insert a ``<prop>`` tag value inside a TU.
+def replace_prop_value(tu: etree.Element, prop_type: str, new_value: str) -> etree.Element:
+    """Replace or create a ``<prop>`` element with the given type/value.
 
-    If a ``<prop>`` with the given ``type`` exists it will be updated; if not,
-    a new ``<prop>`` element will be appended to the TU.
+    If a ``<prop>`` with ``type==prop_type`` exists, its text is updated;
+    otherwise a new ``<prop>`` element is appended to the ``<tu>``.
     """
     if tu is None or not hasattr(tu, 'findall'):
         raise InvalidTUError('replace_prop_value expects a tu element')

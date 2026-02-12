@@ -27,6 +27,12 @@ class TmxParseError(TmxkitError):
     pass
 
 
+class TgtLangMissingError(TmxkitError):
+    """Raised when the TMX header is missing a target language (tgtLang)."""
+
+    pass
+
+
 class InvalidTUError(TmxkitError):
     """Raised when a <tu> structure does not match expected format."""
 

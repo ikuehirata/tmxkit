@@ -17,10 +17,10 @@ Note: Most functionality is implemented in the subpackages; the top-level
 package only exposes common types and exceptions.
 """
 
-from . import io, pipeline, tu
+from . import core, io, pipeline, tu
 from .errors import InvalidTUError, StreamError, TmxkitError, TmxParseError
 
 __all__ = [
-    'TmxkitError', 'TmxParseError', 'InvalidTUError', 'StreamError',
-    'io', 'tu', 'pipeline',
+	'TmxkitError', 'TmxParseError', 'InvalidTUError', 'StreamError',
+	'core', 'io', 'tu', 'pipeline',
 ]
