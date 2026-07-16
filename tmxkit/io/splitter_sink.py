@@ -10,6 +10,8 @@ import lxml.etree as etree
 from ..core.models import TMXHeader
 from .writer import TMXWriter, WriterRouter, default_output_resolver, default_writer_factory
 
+logger = logging.getLogger(__name__)
+
 
 def consume_and_split(
     input_stream: Iterable[etree.Element],
@@ -21,7 +23,7 @@ def consume_and_split(
     buffer_size: int = 200,
     max_writers: int = 100,
     base_dir: Path = Path('.'),
-    logger: logging.Logger | None = None,
+    error_path: Path | None = None,
 ) -> dict[str, int]:
     """Consume a TU stream sequentially and split it into TMX files by category.
 
@@ -49,17 +51,16 @@ def consume_and_split(
     max_writers : int
         Maximum number of concurrently open writers.
     base_dir : Path
-        Base directory used to resolve relative output paths. Defaults to
-        the current working directory.
-    logger : logging.Logger | None
-        Optional logger. If ``None``, the module logger is used.
+        Base directory for output file paths. Default is the current directory.
+    error_path : Path | None
+        File path for saving TUs that failed to write on error.
+        If ``None``, each writer uses its own auto-generated path.
 
     Returns
     -------
     dict[str, int]
         Mapping from output file path strings to the number of TUs written.
     """
-    logger = logger or logging.getLogger(__name__)
     base_dir = Path(base_dir)
     # 出力先を作成しておく
     if not base_dir.exists():
@@ -77,7 +78,8 @@ def consume_and_split(
             base_dir=base_dir,
             header_path=header_path,
             header_obj=header_obj,
-            buffer_size=buffer_size
+            buffer_size=buffer_size,
+            error_path=error_path,
         )
 
     router = WriterRouter(writer_factory=writer_factory, max_writers=max_writers)

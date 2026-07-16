@@ -7,18 +7,77 @@ from __future__ import annotations
 
 import re
 from html import escape
+from uuid import uuid4
 
 # ペアタグは開始/終了の両方を処理する。単独タグは開始のみ処理する。
 PAIR_TAGS = [
     'a', 'b', 'i', 'u', 'strong', 'em',
     'span', 'div', 'font', 'p',
 ]
-'''開閉があるタグ'''
+'''Tags with opening and closing pairs'''
 
 SINGLETON_TAGS = [
     'br', 'hr', 'img',
 ]
-'''単独（void/singleton）タグ'''
+'''Singleton (void/singleton) tags'''
+
+
+def _extract_and_protect_tags(text: str) -> tuple[str, dict[str, str]]:
+    """Extract and protect already-tagged portions, replacing them with placeholders.
+
+    Replaces already-tagged markup portions (`<ph>...</ph>`, `<bpt>...</bpt>`,
+    etc.) with temporary placeholders, keeping the original values in a
+    dict and returning it.
+
+    Parameters
+    ----------
+    text : str
+        The text to process.
+
+    Returns
+    -------
+    tuple[str, dict[str, str]]
+        (text with placeholders substituted in, {placeholder: original value})
+    """
+    protected: dict[str, str] = {}
+    counter = 0
+    # 原文にプレースホルダと同じ文字列が含まれても衝突しないよう uuid を混ぜる
+    prefix = f'__PROTECTED_TAG_{uuid4().hex}'
+
+    # <ph>...</ph>, <bpt>...</bpt>, <ept>...</ept>, <it>...</it> を抽出
+    pattern = re.compile(r'<(ph|bpt|ept|it)(?:\s[^>]*)?>.*?</\1>', re.DOTALL)
+
+    def replace_with_placeholder(match: re.Match) -> str:
+        nonlocal counter
+        original = match.group(0)
+        placeholder = f'{prefix}_{counter}__'
+        protected[placeholder] = original
+        counter += 1
+        return placeholder
+
+    text = pattern.sub(replace_with_placeholder, text)
+    return text, protected
+
+
+def _restore_protected_tags(text: str, protected: dict[str, str]) -> str:
+    """Restore placeholders back to their original tags.
+
+    Parameters
+    ----------
+    text : str
+        Text containing placeholders.
+    protected : dict[str, str]
+        {placeholder: original value}
+
+    Returns
+    -------
+    str
+        The text after restoration.
+    """
+    for placeholder, original in protected.items():
+        text = text.replace(placeholder, original)
+    return text
+
 
 
 def tagify_canonical_html(text: str) -> str:
@@ -30,6 +89,55 @@ def tagify_canonical_html(text: str) -> str:
     """
     # TODO 実装
     raise NotImplementedError('tagify_canonical_html is not implemented yet')
+
+
+def tagify_newline(text: str) -> str:
+    r"""Convert line-break characters (\n or literal line breaks) in a string into `ph`-style mq:rxt.
+
+    Already-tagged portions are protected before processing and restored
+    afterward.
+
+    Parameters
+    ----------
+    text : str
+        The segment text.
+
+    Returns
+    -------
+    str
+        The converted text.
+    """
+    # タグ化済み部分を保護
+    protected_text, protected = _extract_and_protect_tags(text)
+
+    def _to_ph_from_newline(match_obj: re.Match) -> str:
+        # マッチした内容を確認して、リテラル \\n か実改行かを判定
+        matched = match_obj.group(1)
+        if matched == '\\n':
+            # 文字列リテラル \\n
+            inner = escape('\\n')
+        else:
+            # リテラルな改行文字
+            inner = escape('\n')
+        inner = inner.replace('&quot;', '&amp;quot;')
+        return f'<ph>&lt;mq:rxt displaytext="{inner}" val="{inner}" /&gt;</ph>'
+
+    # リテラルな \\n を検出
+    protected_text = re.sub(
+        r'(\\n)',
+        _to_ph_from_newline,
+        protected_text,
+    )
+
+    # 実際の改行文字を検出
+    protected_text = re.sub(
+        r'(\n)',
+        _to_ph_from_newline,
+        protected_text,
+    )
+
+    # 保護していたタグを復元
+    return _restore_protected_tags(protected_text, protected)
 
 
 def tagify_plain_html(text: str) -> str:
@@ -45,6 +153,8 @@ def tagify_plain_html(text: str) -> str:
     str
         The transformed text with ``<ph>`` placeholders inserted.
     """
+    # タグ化済み部分を保護
+    protected_text, protected = _extract_and_protect_tags(text)
 
     def _to_ph_from_raw(raw: str) -> str:
         # raw は '<a href="...">' または '&lt;a href=&quot;...&quot;&gt;' のような形
@@ -57,47 +167,48 @@ def tagify_plain_html(text: str) -> str:
     # 単独タグは開始のみ処理
     for t in SINGLETON_TAGS:
         open_literal_re = re.compile(
-            rf'(?<!<ph>)(?<!<bpt>)(?<!<ept>)(<\s*{t}\b[^>]*>)',
+            rf'(<\s*{t}\b[^>]*>)',
             re.IGNORECASE,
         )
-        text = open_literal_re.sub(lambda m: _to_ph_from_raw(m.group(1)), text)
+        protected_text = open_literal_re.sub(lambda m: _to_ph_from_raw(m.group(1)), protected_text)
 
         open_escaped_re = re.compile(
-            rf'(?<!<ph>)(?<!<bpt>)(?<!<ept>)(&lt;\s*{t}\b.*?&gt;)',
+            rf'(&lt;\s*{t}\b.*?&gt;)',
             re.IGNORECASE,
         )
-        text = open_escaped_re.sub(lambda m: _to_ph_from_raw(m.group(1)), text)
+        protected_text = open_escaped_re.sub(lambda m: _to_ph_from_raw(m.group(1)), protected_text)
 
     # ペアタグは開始/終了の両方を処理
     for t in PAIR_TAGS:
         # opening tag: handle literal <tag ...> first
         open_literal_re = re.compile(
-            rf'(?<!<ph>)(?<!<bpt>)(?<!<ept>)(<\s*{t}\b[^>]*>)',
+            rf'(<\s*{t}\b[^>]*>)',
             re.IGNORECASE,
         )
-        text = open_literal_re.sub(lambda m: _to_ph_from_raw(m.group(1)), text)
+        protected_text = open_literal_re.sub(lambda m: _to_ph_from_raw(m.group(1)), protected_text)
 
         # opening tag: handle escaped &lt;tag ...&gt;
         open_escaped_re = re.compile(
-            rf'(?<!<ph>)(?<!<bpt>)(?<!<ept>)(&lt;\s*{t}\b.*?&gt;)',
+            rf'(&lt;\s*{t}\b.*?&gt;)',
             re.IGNORECASE,
         )
-        text = open_escaped_re.sub(lambda m: _to_ph_from_raw(m.group(1)), text)
+        protected_text = open_escaped_re.sub(lambda m: _to_ph_from_raw(m.group(1)), protected_text)
 
         # closing tag: literal and escaped
         close_literal_re = re.compile(
-            rf'(?<!<ph>)(?<!<bpt>)(?<!<ept>)(</\s*{t}\s*>)',
+            rf'(</\s*{t}\s*>)',
             re.IGNORECASE,
         )
-        text = close_literal_re.sub(lambda m: _to_ph_from_raw(m.group(1)), text)
+        protected_text = close_literal_re.sub(lambda m: _to_ph_from_raw(m.group(1)), protected_text)
 
         close_escaped_re = re.compile(
-            rf'(?<!<ph>)(?<!<bpt>)(?<!<ept>)(&lt;/\s*{t}\s*&gt;)',
+            rf'(&lt;/\s*{t}\s*&gt;)',
             re.IGNORECASE,
         )
-        text = close_escaped_re.sub(lambda m: _to_ph_from_raw(m.group(1)), text)
+        protected_text = close_escaped_re.sub(lambda m: _to_ph_from_raw(m.group(1)), protected_text)
 
-    return text
+    # 保護していたタグを復元
+    return _restore_protected_tags(protected_text, protected)
 
 
 def find_ph_mq_rxt_tags(text: str) -> list[re.Match]:
@@ -150,8 +261,9 @@ def convert_ph_to_bptept(text: str) -> str:
             return m.group(1).lower()
         return inner.lower()
 
-    stack: list[tuple[str, str]] = []  # (disp, full_ph_text)
-    replacements: list[tuple[str, str]] = []
+    stack: list[re.Match] = []  # 未対応の開始タグのマッチ
+    # 同一文字列の ph が複数あっても一意に置換できるよう位置（span）で持つ
+    replacements: list[tuple[int, int, str]] = []  # (start, end, new)
     pair_count = 1
 
     # build content string placed inside bpt/ept/it (no self-closing slash)
@@ -165,7 +277,6 @@ def convert_ph_to_bptept(text: str) -> str:
     # iterate matches with position info
     for m in src_matches:
         disp = m.group('disp')
-        full_ph = m.group(0)
         tagname = _disp_to_tagname(disp)
         is_close = tagname.startswith('/')
 
@@ -177,13 +288,13 @@ def convert_ph_to_bptept(text: str) -> str:
 
         if not is_close:
             # opening tag -> push
-            stack.append((disp, full_ph))
+            stack.append(m)
         else:
             # closing tag -> try match with stack top
             if stack:
-                open_disp, open_ph = stack[-1]
+                open_m = stack[-1]
+                open_disp = open_m.group('disp')
                 open_name_base = _base_tag(open_disp)
-                name_base = _base_tag(disp)
                 if open_name_base == name_base:
                     stack.pop()
                     # build bpt/ept using the original disp values
@@ -192,15 +303,15 @@ def convert_ph_to_bptept(text: str) -> str:
                     i_val = pair_count
                     bpt = f"<bpt i='{i_val}'>{open_inner}</bpt>"
                     ept = f"<ept i='{i_val}'>{close_inner}</ept>"
-                    replacements.append((open_ph, bpt))
-                    replacements.append((full_ph, ept))
+                    replacements.append((open_m.start(), open_m.end(), bpt))
+                    replacements.append((m.start(), m.end(), ept))
                     pair_count += 1
                 else:
                     # 不整合なら、p タグであれば it pos='end' に変換
                     if name_base == 'p':
                         it_inner = _mq_rxt_inner(disp, mode='close')
                         it_tag = f"<it pos='end'>{it_inner}</it>"
-                        replacements.append((full_ph, it_tag))
+                        replacements.append((m.start(), m.end(), it_tag))
                     # それ以外は無視
                     continue
             else:
@@ -208,20 +319,20 @@ def convert_ph_to_bptept(text: str) -> str:
                 if name_base == 'p':
                     it_inner = _mq_rxt_inner(disp, mode='close')
                     it_tag = f"<it pos='end'>{it_inner}</it>"
-                    replacements.append((full_ph, it_tag))
+                    replacements.append((m.start(), m.end(), it_tag))
                 continue
 
     # スタックに残った開始タグで未ペアのものは処理する
-    for open_disp, open_ph in stack:
+    for open_m in stack:
+        open_disp = open_m.group('disp')
         open_name_base = _base_tag(open_disp)
         if open_name_base == 'p':
             it_inner = _mq_rxt_inner(open_disp, mode='open')
             it_tag = f"<it pos='begin'>{it_inner}</it>"
-            replacements.append((open_ph, it_tag))
+            replacements.append((open_m.start(), open_m.end(), it_tag))
 
-    # apply replacements; replace longer old strings first to avoid partial overlap
-    replacements_sorted = sorted(replacements, key=lambda x: -len(x[0]))
-    for old, new in replacements_sorted:
-        text = text.replace(old, new)
+    # 後ろの位置から順に置換して、前方の span がずれないようにする
+    for start, end, new in sorted(replacements, key=lambda r: r[0], reverse=True):
+        text = text[:start] + new + text[end:]
 
     return text

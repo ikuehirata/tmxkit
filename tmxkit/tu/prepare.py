@@ -12,7 +12,7 @@ import lxml.etree as etree
 from ..core.models import TMXHeader
 from .normalize import normalize_whitespace
 from .segment import _ALLOWED_SEGMENTS, SEGMENTS, get_segment, get_text, replace_text
-from .tags import convert_ph_to_bptept, tagify_plain_html
+from .tags import convert_ph_to_bptept, tagify_newline, tagify_plain_html
 
 
 def run(header: TMXHeader, tu: etree.Element) -> etree.Element:
@@ -24,7 +24,7 @@ def run(header: TMXHeader, tu: etree.Element) -> etree.Element:
     Parameters
     ----------
     header : TMXHeader
-        Parsed TMX header providing source/target language information.
+        Header information required for processing (references `srclang` / `tgtlang`).
     tu : etree.Element
         The `<tu>` element to process.
 
@@ -53,10 +53,13 @@ def run(header: TMXHeader, tu: etree.Element) -> etree.Element:
         # 0) 正規化・軽加工（必要に応じてここで関数を追加）
         normalized = normalize_whitespace(org_text)
 
-        # 1) 平文タグ化
-        tagged = tagify_plain_html(normalized)
+        # 1) 改行文字をタグ化
+        newline_tagged = tagify_newline(normalized)
 
-        # 2) PH -> BPT/EPT 変換
+        # 2) 平文タグ化
+        tagged = tagify_plain_html(newline_tagged)
+
+        # 3) PH -> BPT/EPT 変換
         src_converted = convert_ph_to_bptept(tagged)
 
         # 置換

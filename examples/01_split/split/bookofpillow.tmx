@@ -155,3 +155,156 @@
   </tu>
 </body>
 </tmx>
+<tu changedate="20260131T142244Z" creationdate="20260131T142244Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-post">&lt;seg&gt;As the light creeps over the hills, their outlines are dyed a faint red and wisps of purplish cloud trail over them.&lt;/seg&gt;</prop>
+      <seg>In spring it is the dawn that is most beautiful.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>春は、あけぼの。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T142259Z" creationdate="20260131T142259Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;In spring it is the dawn that is most beautiful.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;In summer the nights.&lt;/seg&gt;</prop>
+      <seg>As the light creeps over the hills, their outlines are dyed a faint red and wisps of purplish cloud trail over them.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>やうやう白くなりゆく山ぎは少し明りて紫だちたる雲の細くたなびきたる。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T142244Z" creationdate="20260131T142244Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;As the light creeps over the hills, their outlines are dyed a faint red and wisps of purplish cloud trail over them.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;Not only when the moon shines, but on dark nights too, as the fireflies flit to and fro, and even when it rains, how beautiful it is!&lt;/seg&gt;</prop>
+      <seg>In summer the nights.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>夏は、夜。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T142244Z" creationdate="20260131T142244Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;In summer the nights.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;In autumn the evenings, when the glittering sun sinks close to the edge of the hills and the crows fly back to their nests in threes and fours and twos; more charming still is a file of wild geese, like specks in the distant sky.&lt;/seg&gt;</prop>
+      <seg>Not only when the moon shines, but on dark nights too, as the fireflies flit to and fro, and even when it rains, how beautiful it is!</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>月の頃はさらなり。闇もなほ。螢の多く飛び違ひたる。また、ただ一つ二つなど、ほのかにうち光りて行くもをかし。雨など降るもをかし。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T142244Z" creationdate="20260131T142244Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;Not only when the moon shines, but on dark nights too, as the fireflies flit to and fro, and even when it rains, how beautiful it is!&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;When the sun has set, one's heart is moved by the sound of the wind and the hum of the insects.&lt;/seg&gt;</prop>
+      <seg>In autumn the evenings, when the glittering sun sinks close to the edge of the hills and the crows fly back to their nests in threes and fours and twos; more charming still is a file of wild geese, like specks in the distant sky.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>秋は、夕暮れ。夕日のさして、山の端いと近うなりたるに、烏の寝どころへ行くとて、三つ四つ、二つ三つなど、飛び急ぐさへあはれなり。まいて雁などの列ねたるがいと小さく見ゆるは、いとをかし。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T142244Z" creationdate="20260131T142244Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;In autumn the evenings, when the glittering sun sinks close to the edge of the hills and the crows fly back to their nests in threes and fours and twos; more charming still is a file of wild geese, like specks in the distant sky.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;In winter the early mornings.&lt;/seg&gt;</prop>
+      <seg>When the sun has set, one's heart is moved by the sound of the wind and the hum of the insects.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>日入り果てて、風の音、虫の音など、はたいふべきにあらず。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T142244Z" creationdate="20260131T142244Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;When the sun has set, one's heart is moved by the sound of the wind and the hum of the insects.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;It is beautiful indeed when snow has fallen during the night, but splendid too when the ground is white with frost; or even when there is no snow or frost, but it is simply very cold and the attendants hurry from room to room stirring up the fires and bringing charcoal, how well this fits the season's mood!&lt;/seg&gt;</prop>
+      <seg>In winter the early mornings.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>冬は、つとめて。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T142244Z" creationdate="20260131T142244Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;In winter the early mornings.&lt;/seg&gt;</prop>
+      <prop type="x-context-post">&lt;seg&gt;But as noon approaches and the cold wears off, no one bothers to keep the braziers alight, and soon nothing remains but piles of white ashes.&lt;/seg&gt;</prop>
+      <seg>It is beautiful indeed when snow has fallen during the night, but splendid too when the ground is white with frost; or even when there is no snow or frost, but it is simply very cold and the attendants hurry from room to room stirring up the fires and bringing charcoal, how well this fits the season's mood!</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>雪の降りたるはいふべきにもあらず。霜のいと白きも、またさらでも、いと寒きに、火など急ぎ熾して、炭もて渡るも、いとつきづきし。</seg>
+    </tuv>
+  </tu>
+  <tu changedate="20260131T142244Z" creationdate="20260131T142244Z" creationid="user" changeid="user">
+    <prop type="client"> </prop>
+    <prop type="project"> </prop>
+    <prop type="domain"> </prop>
+    <prop type="subject"> </prop>
+    <prop type="corrected">no</prop>
+    <prop type="aligned">no</prop>
+    <prop type="x-document">bookofpillow.txt</prop>
+    <tuv xml:lang="en">
+      <prop type="x-context-pre">&lt;seg&gt;It is beautiful indeed when snow has fallen during the night, but splendid too when the ground is white with frost; or even when there is no snow or frost, but it is simply very cold and the attendants hurry from room to room stirring up the fires and bringing charcoal, how well this fits the season's mood!&lt;/seg&gt;</prop>
+      <seg>But as noon approaches and the cold wears off, no one bothers to keep the braziers alight, and soon nothing remains but piles of white ashes.</seg>
+    </tuv>
+    <tuv xml:lang="ja">
+      <seg>昼になりて、ぬるくゆるびもていけば、火桶の火も、白き灰がちになりて、わろし。</seg>
+    </tuv>
+  </tu>
+</body>
+</tmx>

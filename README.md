@@ -38,9 +38,11 @@ tmxkit aims to be quiet, fast, and unobtrusive — a foundation library.
 
 ```
 tmxkit/
+├─ core/      # data models (TMXHeader, TU, Tuv)
 ├─ io/        # streaming TMX read/write/merge
 ├─ tu/        # utilities for <tu>, <prop>, <seg>
 ├─ pipeline/  # thin helpers to apply processing to TU streams
+├─ ops/       # high-level operations (split, merge, export)
 └─ errors.py
 ```
 
@@ -52,7 +54,7 @@ Example:
 
 ```python
 from pathlib import Path
-from tmxkit.io.reader import stream_tu, read_header_only
+from tmxkit.io.reader import stream_tu
 from tmxkit.io.writer import write_tu_stream
 from tmxkit.pipeline.apply import apply
 from tmxkit.tu.props import replace_prop_value

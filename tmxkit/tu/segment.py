@@ -1,4 +1,5 @@
-"""Utilities for working with ``<seg>`` / ``<tuv>`` elements."""
+"""seg / tuv operations"""
+from __future__ import annotations
 
 import re
 from typing import Literal
@@ -38,7 +39,8 @@ def get_segment(tu: etree.Element, lang_code: str) -> etree.Element | None:
 
     for tuv in tu.findall('tuv'):
         lang = tuv.get('{http://www.w3.org/XML/1998/namespace}lang')
-        if lang == lang_code:
+        # BCP-47 の言語コードは大文字小文字を区別しない
+        if lang is not None and lang.lower() == lang_code.lower():
             seg = tuv.find('seg')
             if seg is not None:
                 return seg
@@ -48,25 +50,26 @@ def get_segment(tu: etree.Element, lang_code: str) -> etree.Element | None:
 def get_text(
     segment: etree.Element
 ) -> str | None:
-    """Return the inner XML of a ``<seg>`` element as a string.
+    """Get the inner XML of a `<seg>` element as a plain string.
 
     Parameters
     ----------
     segment : etree.Element
-        The ``<seg>`` element to extract inner XML from.
+        The `<seg>` element. Returns `None` if `None` is passed.
 
     Returns
     -------
     str | None
-        The inner XML of the ``<seg>`` element, or ``None`` if the
-        provided segment is ``None``.
+        The text (inner XML) inside `<seg>`. Returns `None` if `segment`
+        is `None`.
     """
     # segment が None の場合は None を返す（呼び出し側で処理する）
     if segment is None:
         return None
 
     # 安全のため seg 全体を文字列化して外側の <seg> タグを剥がす
-    seg_str = etree.tostring(segment, encoding='unicode')
+    # tail テキストは seg の中身ではないので含めない
+    seg_str = etree.tostring(segment, encoding='unicode', with_tail=False)
     # remove opening <seg ...> and closing </seg>
     inner = re.sub(r'^<seg[^>]*>', '', seg_str)
     inner = re.sub(r'</seg>', '', inner)
@@ -78,19 +81,19 @@ def replace_text(
     segment: etree.Element,
     new_inner_xml: str
 ) -> etree.Element:
-    """Replace the contents of a ``<seg>`` element with new inner XML.
+    """Replace the contents of `segment` (a `<seg>` element) with `new_inner_xml`.
 
     Parameters
     ----------
     segment : etree.Element
-        The ``<seg>`` element to modify.
+        The `<seg>` element to replace the contents of.
     new_inner_xml : str
-        New XML string to insert inside the ``<seg>`` element.
+        The new XML string to insert inside `<seg>`.
 
     Returns
     -------
     etree.Element
-        The modified ``<seg>`` element.
+        The `<seg>` element after replacement.
     """
     # 既存の中身を全部消す
     segment.clear()

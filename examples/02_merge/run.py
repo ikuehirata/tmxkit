@@ -8,10 +8,8 @@ TUs, and writes the result to `output.tmx` in the same directory.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterable
 
-from tmxkit.core.models import TMXHeader
-from tmxkit.io import merge_streams, stream_tu, write_tu_stream
+from tmxkit.ops import merge
 
 
 def main() -> None:
@@ -20,19 +18,7 @@ def main() -> None:
     inputs = [base / 'input1.tmx', base / 'input2.tmx']
     output = base / 'output.tmx'
 
-    # 入力ストリームを作成
-    header = TMXHeader.from_tmx_file(inputs[0])
-    streams: Iterable = (stream_tu(p) for p in inputs)
-
-    # マージして書き出す
-    merged = merge_streams(*streams)
-
-    # ヘッダは先頭ファイルを参照する（None の場合はデフォルトヘッダ）
-    written = write_tu_stream(
-        tu_stream=merged,
-        header_obj=header,
-        out_path=output,
-    )
+    written = merge(inputs, output)
 
     print(f'saved TUs: {written}')
 

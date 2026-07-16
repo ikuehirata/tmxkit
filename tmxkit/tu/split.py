@@ -31,7 +31,7 @@ def _split_inner_by_fmt(seg: etree.Element) -> List[etree.Element]:
     markers are removed from the results.
     """
     if seg is None:
-        return [copy.deepcopy(seg) if seg is not None else etree.Element('seg')]
+        return [etree.Element('seg')]
 
     inner_xml = get_text(seg)
     if inner_xml is None:

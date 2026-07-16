@@ -1,4 +1,5 @@
-"""Serialize TU elements."""
+"""Serialize a tu"""
+from __future__ import annotations
 
 import lxml.etree as etree
 

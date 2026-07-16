@@ -16,11 +16,18 @@ Example:
 Note: Most functionality is implemented in the subpackages; the top-level
 package only exposes common types and exceptions.
 """
+from __future__ import annotations
 
-from . import core, io, pipeline, tu
+from . import ops, tu
 from .errors import InvalidTUError, StreamError, TmxkitError, TmxParseError
 
 __all__ = [
-	'TmxkitError', 'TmxParseError', 'InvalidTUError', 'StreamError',
-	'core', 'io', 'tu', 'pipeline',
+    # 例外（誰でも使う）
+    'TmxkitError', 'TmxParseError', 'InvalidTUError', 'StreamError',
+    # 高レベルAPI（ユーザー向け）
+    'ops',
+    # TU操作ユーティリティ（ユーザー向け）
+    'tu',
+    # io / pipeline / core は意図的に非公開
+    # → 必要な人は from tmxkit.io import ... で明示的にimportする
 ]

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tmxkit"
-version = "0.2.0"
+version = "0.2.1"
 
 readme = "README.md"
 license = { text = "MIT" }
@@ -32,7 +32,7 @@ target-version = "py313"        # 使ってるPythonに合わせて
 select = ["E", "F", "I", "Q", "D"]
 # 自動修正を積極化（VS Codeの保存時Fixにも効く）
 fixable = ["ALL"]
-ignore = ["D400", "D401", "D403"]
+ignore = ["D400", "D401", "D403", "Q001"]
 
 # flake8-quotes 互換オプション（Ruffに内蔵）
 [tool.ruff.lint.flake8-quotes]

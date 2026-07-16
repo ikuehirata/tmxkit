@@ -1,9 +1,11 @@
-"""Utility functions for TMX file I/O.
+"""Utility functions for TMX file input/output.
 
 These helpers provide lightweight parsing utilities used to extract the
 ``<header>`` or the first ``<tu>`` element from a TMX file without loading
 the entire document into memory.
 """
+from __future__ import annotations
+
 from pathlib import Path
 
 import lxml.etree as etree

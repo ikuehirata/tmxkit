@@ -10,6 +10,8 @@ Main feature:
 The pipeline is intentionally thin; the processing responsibility remains with
 the caller-provided ``processor``.
 """
+from __future__ import annotations
+
 from .apply import apply
 
 __all__ = ['apply']

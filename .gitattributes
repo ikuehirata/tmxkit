@@ -1,0 +1,3 @@
+# docs/ 以下は main 専用。release 等へのマージ時は常に自分側（ours）を採用する。
+# 利用にはローカル設定が必要: git config merge.ours.driver true
+docs/** merge=ours

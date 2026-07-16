@@ -1,8 +1,7 @@
-"""Writing utilities (streaming)."""
+"""Writing out a single stream"""
+from __future__ import annotations
 
 import logging
-import os
-import tempfile
 import time
 import warnings
 from collections import OrderedDict
@@ -14,14 +13,9 @@ import lxml.etree as etree
 
 from tmxkit.core.models import TMXHeader
 
+logger = logging.getLogger(__name__)
 
-def is_tmx_header(elem: etree.Element) -> bool:
-    """Return True if ``elem`` is a TMX ``<header>`` element."""
-    q = etree.QName(elem)
-    if q.localname != 'header':
-        return False
-    parent = elem.getparent()
-    return parent is not None and etree.QName(parent).localname == 'tmx'
+_FOOTER_BYTES = b'</body>\n</tmx>\n'
 
 
 def make_default_header() -> etree.Element:
@@ -49,19 +43,22 @@ def _write_header(header: etree.Element | None, out_f: BinaryIO) -> None:
         b'<tmx version="1.4">\n'
     )
 
-    # header が tmx の header かどうかを判定
-    if header is not None and not is_tmx_header(header):
-        warnings.warn(
-            '⚠️ The provided header is not a TMX header.'
-            ' Recommended code:\n'
-            'import tmxkit\n'
-            'header = tmxkit.io.reader.read_header_only(input_path)\n',
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        # header が tmx でなければ、tmx の子要素として header を探す
-        root = header
-        header = root.find('header')
+    # <tmx> ルートが渡された場合は子要素の header を探す。
+    # 単独の <header> 要素はそのまま使う。
+    if header is not None:
+        localname = etree.QName(header).localname
+        if localname == 'tmx':
+            header = header.find('header')
+        elif localname != 'header':
+            warnings.warn(
+                '⚠️ The header argument is not a TMX header. '
+                'Recommended code:\n'
+                'import tmxkit\n'
+                'header = tmxkit.io.reader.parse_header(input_path).generate_xtm\n',
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+            header = None
 
     # ヘッダが存在しない場合はデフォルトを作成
     if header is None:
@@ -85,6 +82,7 @@ def write_tu_stream(
     out_path: Path,
     header_path: Path | None = None,
     header_obj: TMXHeader | None = None,
+    error_path: Path | None = None,
 ) -> int:
     """Write a TMX file from a stream of `<tu>` elements.
 
@@ -99,7 +97,10 @@ def write_tu_stream(
         Optional ``TMXHeader`` instance to use directly for output. If
         provided, this takes precedence over ``header_path``.
     out_path : pathlib.Path
-        Destination file path for the output TMX.
+        Destination file path.
+    error_path : pathlib.Path or None
+        File path for saving TUs that failed to write on error.
+        If ``None``, ``{out_path.stem}_error.tmx`` is auto-generated.
 
     Returns
     -------
@@ -110,7 +111,8 @@ def write_tu_stream(
     writer = TMXWriter(
         path=out_path,
         header_path=header_path,
-        header_obj=header_obj
+        header_obj=header_obj,
+        error_path=error_path,
     )
     try:
         for tu in tu_stream:
@@ -166,18 +168,68 @@ def finalize_tmx_file(path: Path) -> None:
         _write_footer(out_f)
 
 
+def _remove_tmx_footer(path: Path) -> bool:
+    """Remove the TMX footer (</body></tmx>) from an existing file, putting it into append mode.
+
+    If the file exists and already ends with the footer, remove it and
+    return True. Returns False if the file doesn't exist or has no footer.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        Target file path.
+
+    Returns
+    -------
+    bool
+        True if the footer was removed, False otherwise.
+    """
+    if not path.exists():
+        return False
+
+    try:
+        with open(path, 'rb') as f:
+            content = f.read()
+
+        # ファイルの末尾がフッタで終わっているかチェック
+        if content.endswith(_FOOTER_BYTES):
+            # フッタを削除
+            new_content = content[:-len(_FOOTER_BYTES)]
+            with open(path, 'wb') as f:
+                f.write(new_content)
+            return True
+    except Exception:
+        logger.exception('failed to remove footer from %s', path)
+
+    return False
+
+
 class TMXWriter:
     """Writer for appending TUs to a single TMX output file.
+
+    In addition to `path`, the constructor accepts a way to specify the
+    header: either `header_path` (a path to an existing TMX file to read
+    the header from) or `header_obj` (a `TMXHeader` instance).
 
     Parameters
     ----------
     path : pathlib.Path
         Destination file path.
     header_path : pathlib.Path | None
-        Path to a TMX file providing the `<header>` for output. If ``None``,
-        a default header will be used.
+        Path to a TMX file whose header should be used for output. If None,
+        a default header is used.
+    header_obj : TMXHeader | None
+        A `TMXHeader` instance to directly specify the output TMX's header
+        information. If `None`, `header_path` is used instead.
     buffer_size : int
-        Internal buffer threshold (number of TUs) before flushing to disk.
+        Internal buffer threshold (number of TUs).
+    error_path : pathlib.Path | None
+        File path for saving TUs that failed to write on error.
+        If ``None``, ``{output filename stem}_error.tmx`` is auto-generated.
+    retry_count : int
+        Number of retries on write failure. Default is 3.
+    retry_delay : float
+        Wait time between retries, in seconds. Default is 1.0 second.
     """
 
     def __init__(
@@ -185,7 +237,9 @@ class TMXWriter:
         header_path: Path | None = None,
         header_obj: TMXHeader | None = None,
         buffer_size: int = 200,
-        logger: logging.Logger | None = None
+        error_path: Path | None = None,
+        retry_count: int = 3,
+        retry_delay: float = 1.0,
     ):
         """Initialize the TMXWriter.
 
@@ -200,9 +254,14 @@ class TMXWriter:
             Optional ``TMXHeader`` instance to use directly for output.
             If provided, this takes precedence over ``header_path``.
         buffer_size : int
-            Internal buffer threshold (number of TUs) before flushing.
-        logger : logging.Logger | None
-            Optional logger instance.
+            Internal buffer threshold (number of TUs).
+        error_path : pathlib.Path | None
+            File path for saving TUs that failed to write on error.
+            If ``None``, ``{output filename stem}_error.tmx`` is auto-generated.
+        retry_count : int
+            Number of retries on write failure. Default is 3.
+        retry_delay : float
+            Wait time between retries, in seconds. Default is 1.0 second.
         """
         self.path = Path(path)
         self._header_path = Path(header_path) if header_path is not None else None
@@ -213,25 +272,43 @@ class TMXWriter:
         self._initialized = False
         self._finalized = False
         self._count = 0
-        self.logger = logger or logging.getLogger(__name__)
+        self._error_path = Path(error_path) if error_path is not None else None
+        self._retry_count = int(retry_count)
+        self._retry_delay = float(retry_delay)
+        self._error_initialized = False
+        self._error_count = 0
 
     def _ensure_init(self) -> None:
-        """Ensure writer is initialized (create file and write header)."""
+        """Initialize if not already initialized.
+
+        For a new file, writes the header + body opening tag. For an
+        existing file, to put it into append mode, strips the trailing
+        footer (the footer is rewritten by finalize()).
+        """
         if not self._initialized:
-            # resolve header element from path if provided
-            if self._header_path is not None:
+            # header_obj 優先、なければ header_path から解決する
+            if self._header_obj is not None:
+                self.header = self._header_obj.generate_xtm
+            elif self._header_path is not None:
                 try:
                     from ..io.utils import get_header_xml
                     self.header = get_header_xml(self._header_path)
                 except Exception:
                     # fallback to None -> default header
+                    logger.exception(
+                        'failed to read header from %s, using default header',
+                        self._header_path,
+                    )
                     self.header = None
-            if self._header_obj is not None:
-                self.header = self._header_obj.generate_xtm
             else:
                 self.header = None
 
-            init_tmx_file(self.path, self.header)
+            if not self.path.exists():
+                init_tmx_file(self.path, self.header)
+            else:
+                # 追記モード: 既存フッタを剥がして開いたままの状態にする
+                _remove_tmx_footer(self.path)
+
             self._initialized = True
 
     def append(self, tu: etree.Element) -> None:
@@ -252,52 +329,94 @@ class TMXWriter:
         if len(self._buffer) >= self.buffer_size:
             self.flush()
 
+    def _default_error_path(self) -> Path:
+        """Return the default path for the error file."""
+        return self.path.with_name(self.path.stem + '_error' + self.path.suffix)
+
+    def _save_failed_to_error(self, data: bytes) -> None:
+        """Append TU data that permanently failed to write to the error file."""
+        error_path = self._error_path \
+            if self._error_path is not None else self._default_error_path()
+        try:
+            if not self._error_initialized:
+                if error_path.exists():
+                    # 共有 error_path で先行ライターの退避分を消さないため、
+                    # 既存ファイルは初期化せずフッタだけ剥がして追記する
+                    _remove_tmx_footer(error_path)
+                else:
+                    init_tmx_file(error_path, self.header)
+                self._error_initialized = True
+            append_tu_bytes(error_path, data)
+            logger.warning('failed TUs saved to error file: %s', error_path)
+        except Exception:
+            logger.exception('failed to save error TUs to %s', error_path)
+
     def flush(self) -> None:
-        """Flush the internal buffer to disk atomically."""
+        """Flush the internal buffer to disk.
+
+        Performs a simple append only, without rereading the whole existing
+        file (O(1) I/O). Since `_ensure_init` has already stripped the
+        footer, the file being written to is left in an "open" state
+        without a footer (the footer is written by finalize()).
+        If writing fails, retries up to ``retry_count`` times.
+        If all retries fail, saves the failed TUs to the error file.
+        """
         if not self._buffer:
             return
 
         data = b''.join(self._buffer)
-        tmp_fd, tmp_path = tempfile.mkstemp(prefix=self.path.name + '.', dir=str(self.path.parent))
-        os.close(tmp_fd)
 
-        try:
-            if self.path.exists():
-                with open(self.path, 'rb') as f:
-                    existing = f.read()
-            else:
-                existing = b''
-
-            with open(tmp_path, 'wb') as tf:
-                tf.write(existing)
-                tf.write(data)
-
-            os.replace(tmp_path, str(self.path))
-            self._buffer = []
-        except Exception:
-            ts = int(time.time())
-            failed = self.path.with_name(self.path.name + f'.failed-{ts}')
+        for attempt in range(self._retry_count + 1):
             try:
-                os.replace(tmp_path, str(failed))
+                append_tu_bytes(self.path, data)
+                self._buffer = []
+                return
             except Exception:
-                try:
-                    os.remove(tmp_path)
-                except Exception:
-                    pass
-            self.logger.exception('flush failed for %s, moved to %s', self.path, failed)
-            raise
+                if attempt < self._retry_count:
+                    logger.warning(
+                        'flush failed for %s (attempt %d/%d), retrying in %.1fs',
+                        self.path, attempt + 1, self._retry_count + 1, self._retry_delay,
+                    )
+                    time.sleep(self._retry_delay)
+                else:
+                    logger.exception(
+                        'flush permanently failed for %s after %d retries, saving to error file',
+                        self.path, self._retry_count,
+                    )
+
+        self._save_failed_to_error(data)
+        self._error_count += len(self._buffer)
+        self._buffer = []
 
     def finalize(self) -> None:
-        """Write footer and finalize the output file."""
+        """Write the footer to finalize the file. Also finalizes the error file if one exists.
+
+        Because of append mode, the file has no footer while being written
+        to. If finalize() is never called due to a crash or similar, a
+        footer-less file remains, but it can be repaired afterward with
+        `finalize_tmx_file`.
+        """
         if self._finalized:
             return
         try:
+            # 空ストリームでも有効な TMX（ヘッダ + 空 body）を出力する
+            self._ensure_init()
             self.flush()
         finally:
             try:
                 finalize_tmx_file(self.path)
             except Exception:
-                self.logger.exception('failed to write footer for %s', self.path)
+                logger.exception('failed to write footer for %s', self.path)
+            if self._error_initialized:
+                error_path = self._error_path \
+                    if self._error_path is not None else self._default_error_path()
+                try:
+                    # 共有 error_path で他ライターが先に finalize 済みでも
+                    # 二重フッタにならないようにする
+                    _remove_tmx_footer(error_path)
+                    finalize_tmx_file(error_path)
+                except Exception:
+                    logger.exception('failed to write footer for error file %s', error_path)
             self._finalized = True
 
     def close(self) -> None:
@@ -306,8 +425,13 @@ class TMXWriter:
 
     @property
     def count(self) -> int:
-        """Return the total number of TUs written."""
-        return self._count
+        """Return the total number of TUs written to the main file (excluding those saved to the error file)."""
+        return self._count - self._error_count
+
+    @property
+    def error_count(self) -> int:
+        """Return the total number of TUs saved to the error file."""
+        return self._error_count
 
 
 class WriterRouter:
@@ -391,7 +515,8 @@ def default_writer_factory(
     base_dir: Path,
     header_path: Path | None = None,
     header_obj: TMXHeader | None = None,
-    buffer_size: int = 200
+    buffer_size: int = 200,
+    error_path: Path | None = None,
 ) -> Callable[[Path], TMXWriter]:
     """Return a default factory function that produces ``TMXWriter`` instances.
 
@@ -400,19 +525,28 @@ def default_writer_factory(
     Parameters
     ----------
     base_dir : pathlib.Path
-        ベースディレクトリ。出力パスが相対の場合に結合される。
+        Base directory. Joined with the output path when it is relative.
     header_path : pathlib.Path | None
-        ヘッダを持つ TMX ファイルのパス（None の場合はデフォルトヘッダ）。
+        Path to a TMX file with a header (default header if None).
     header_obj : TMXHeader | None
-        出力 TMX のヘッダ情報を直接指定する場合の `TMXHeader` インスタンス。
-        `None` の場合は `header_path` を使用する。
+        A `TMXHeader` instance to directly specify the output TMX's header
+        information. If `None`, `header_path` is used instead.
     buffer_size : int
-        Internal buffer threshold (number of TUs) for created ``TMXWriter``.
+        Internal buffer size of the TMXWriter.
+    error_path : pathlib.Path | None
+        File path for saving TUs that failed to write on error.
+        If ``None``, each writer uses its own auto-generated path.
     """
     def factory(out_path: Path) -> TMXWriter:
         p = Path(out_path)
         if not p.is_absolute():
             p = Path(base_dir) / p
-        return TMXWriter(p, header_path=header_path, header_obj=header_obj, buffer_size=buffer_size)
+        return TMXWriter(
+            p,
+            header_path=header_path,
+            header_obj=header_obj,
+            buffer_size=buffer_size,
+            error_path=error_path,
+        )
 
     return factory

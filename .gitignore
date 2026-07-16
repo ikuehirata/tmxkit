@@ -6,6 +6,9 @@ docs/_notes
 tests
 scripts
 .github
+TODO.md
+TODO.yaml
+.claude/settings*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

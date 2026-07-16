@@ -44,9 +44,11 @@ tmxkit は
 
 ```text
 tmxkit/
+├─ core/      # データモデル（TMXHeader / TU / Tuv）
 ├─ io/        # TMX の読み書き・マージ（streaming）
 ├─ tu/        # <tu> / <prop> / <seg> 操作ユーティリティ
 ├─ pipeline/  # TU ストリームに処理を適用する薄い補助層
+├─ ops/       # 高レベル操作（split / merge / export）
 └─ errors.py
 ```
 
@@ -58,7 +60,7 @@ tmxkit は
 
 ```python
 from pathlib import Path
-from tmxkit.io.reader import stream_tu, read_header_only
+from tmxkit.io.reader import stream_tu
 from tmxkit.io.writer import write_tu_stream
 from tmxkit.pipeline.apply import apply
 from tmxkit.tu.props import replace_prop_value

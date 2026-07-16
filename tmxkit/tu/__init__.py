@@ -13,6 +13,7 @@ Main modules:
 These are small helpers that accept a TU as input and perform element
 retrieval and updates via DOM operations.
 """
+from __future__ import annotations
 
 from . import normalize
 from .props import extract_props, get_prop_value, replace_prop_value

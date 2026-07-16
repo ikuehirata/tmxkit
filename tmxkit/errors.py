@@ -8,6 +8,7 @@ Main exceptions:
 - ``InvalidTUError`` — raised when a <tu> structure is different from expected
 - ``StreamError`` — raised for errors during TU stream processing
 """
+from __future__ import annotations
 
 
 class TmxkitError(Exception):

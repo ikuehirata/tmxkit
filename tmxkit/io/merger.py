@@ -1,4 +1,6 @@
-"""Utilities for merging TU streams."""
+"""Merge and split"""
+from __future__ import annotations
+
 import lxml.etree as etree
 
 from ..errors import InvalidTUError

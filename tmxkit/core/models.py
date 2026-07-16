@@ -1,18 +1,27 @@
-"""Data classes representing the TMX ``<header>`` element.
+"""Dataclass module representing the TMX `<header>` and `<tu>` elements.
 
-This module provides a dataclass corresponding to the TMX ``<header>``
-element, exposing required and optional attributes as fields.
+This module provides dataclasses corresponding to the TMX `<header>` and
+`<tu>` elements, holding required and optional attributes as fields.
 """
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 import lxml.etree as etree
 
-from ..io.utils import get_header_xml
+logger = logging.getLogger(__name__)
+
+
+def _tmxkit_version() -> str:
+    """Return the tmxkit version string. Returns 'unknown' if not installed."""
+    try:
+        return version('tmxkit')
+    except PackageNotFoundError:
+        return 'unknown'
 
 
 @dataclass
@@ -38,7 +47,9 @@ class TMXHeader:
     datatype : str
         Data type. Required.
     tgtlang : str | None
-        Target language. Set by the user or inferred.
+        Target language. Required; must be set explicitly. Default is None.
+        `from_tmx_file` leaves it as None and emits a warning if the
+        targetlang prop is missing.
     o_encoding : str | None, optional
         Original file encoding (``o-encoding`` attribute). Default ``None``.
     creationdate : str | None, optional
@@ -54,13 +65,13 @@ class TMXHeader:
     """
 
     creationtool: str = 'tmxkit'
-    creationtoolversion: str = version('tmxkit')
+    creationtoolversion: str = field(default_factory=_tmxkit_version)
     segtype: str = ''
     o_tmf: str = ''
     adminlang: str = ''
     srclang: str = ''
     datatype: str = ''
-    tgtlang: str = 'ja'
+    tgtlang: str | None = None
 
     o_encoding: str | None = None
     creationdate: str | None = None
@@ -119,17 +130,22 @@ class TMXHeader:
 
     @classmethod
     def from_tmx_file(cls, tmx_path: Path) -> 'TMXHeader':
-        """Helper to read ``<header>`` from a TMX file path and create a ``TMXHeader`` instance."""
+        """Helper that reads the `<header>` from a TMX file path and builds a `TMXHeader`."""
+        from ..io.utils import get_header_xml  # 遅延インポート（循環インポート回避）
+
         header = get_header_xml(tmx_path)
         if header is None:
             raise ValueError(f'No <header> found in TMX file: {tmx_path}')
 
         instance = cls.from_element(header)
 
-        # tgtlang が props にない場合は、tuを1個取り出して調べる
+        # targetlang prop が無い TMX は暗黙のデフォルト（旧: 'ja'）にせず、
+        # None のまま返して警告を残す
         if instance.tgtlang is None:
-            # TODO 未実装
-            raise ValueError('targetlang not found in header props')
+            logger.warning(
+                'targetlang prop not found in TMX header: %s (tgtlang is None)',
+                tmx_path,
+            )
 
         return instance
 
@@ -179,3 +195,151 @@ class TMXHeader:
             prop_el.text = '' if val is None else str(val)
 
         return header
+
+
+@dataclass
+class Tuv:
+    """Dataclass representing a TMX TUV (per-language variant of a translation unit).
+
+    Corresponds to the TMX `<tuv>` element.
+
+    Attributes
+    ----------
+    text : str
+        The segment's text content.
+    lang : str | None
+        Language code (xml:lang attribute).
+    raw_xml : etree.Element | None
+        The raw XML element, kept as a fallback for full reconstruction.
+    """
+
+    text: str
+    '''The segment's text content.'''
+    lang: str | None = None
+    '''Language code (xml:lang attribute).'''
+    raw_xml: etree.Element | None = None
+    '''The raw XML element, kept as a fallback for full reconstruction.'''
+
+    def is_empty(self) -> bool:
+        """Whether the text is empty."""
+        return not self.text.strip()
+
+
+@dataclass
+class TU:
+    """Dataclass representing a TMX `<tu>` element (Translation Unit).
+
+    Attributes
+    ----------
+    tuvs : dict[str, Tuv]
+        Dictionary keyed by language code with Tuv values.
+        Typically 'ja', 'en', etc.
+    source_lang : str | None
+        Source language code.
+    target_lang : str | None
+        Target language code.
+    props : dict
+        Dictionary of TMX `<prop>` elements.
+    change_date : str | None
+        Last change datetime (changedate attribute).
+    creation_date : str | None
+        Creation datetime (creationdate attribute).
+    order : int
+        Order of appearance in the original file.
+    raw_xml : etree.Element | None
+        The raw XML element, kept as a fallback for full reconstruction.
+    """
+
+    tuvs: dict[str, Tuv] = field(default_factory=dict)
+    '''Dictionary keyed by language code with Tuv values.'''
+    source_lang: str | None = None
+    '''Source language code.'''
+    target_lang: str | None = None
+    '''Target language code.'''
+    props: dict = field(default_factory=dict)
+    '''Dictionary of TMX `<prop>` elements.'''
+    change_date: str | None = None
+    '''Last change datetime (changedate attribute).'''
+    creation_date: str | None = None
+    '''Creation datetime (creationdate attribute).'''
+    creation_id: str | None = None
+    '''Creator ID (creationid attribute).'''
+    change_id: str | None = None
+    '''Last change author ID (changeid attribute).'''
+    order: int = -1
+    '''Order of appearance in the original file.'''
+    raw_xml: etree.Element | None = None
+    '''The raw XML element, kept as a fallback for full reconstruction.'''
+
+    def get(self, key: str, default: str | None = None) -> str | None:
+        """etree.Element-compatible get method. Retrieves an attribute value.
+
+        Parameters
+        ----------
+        key : str
+            Attribute name (TMX attribute name, camelCase).
+        default : str | None, optional
+            Default value if the attribute doesn't exist. Default is None.
+
+        Returns
+        -------
+        str | None
+            The attribute value, or the default if it doesn't exist.
+
+        Notes
+        -----
+        This method exists for compatibility with etree.Element's .get()
+        method. The key name is automatically mapped to the TU field name.
+        """
+        attr_map = {
+            'changedate': 'change_date',
+            'creationdate': 'creation_date',
+            'creationid': 'creation_id',
+            'changeid': 'change_id',
+        }
+        field_name = attr_map.get(key, key)
+        # 空文字は有効な属性値なので default に化けさせない
+        value = getattr(self, field_name, None)
+        return value if value is not None else default
+
+    def findall(self, path: str) -> list[etree.Element]:
+        """etree.Element-compatible findall method. Searches for sub-elements.
+
+        Parameters
+        ----------
+        path : str
+            XPath path.
+
+        Returns
+        -------
+        list[etree.Element]
+            List of matching elements. Empty list if raw_xml is absent.
+
+        Notes
+        -----
+        This method exists for compatibility with etree.Element's .findall()
+        method. It delegates to the internal raw_xml.
+        """
+        if self.raw_xml is not None:
+            return self.raw_xml.findall(path)
+        return []
+
+    def get_source(self) -> Tuv | None:
+        """Get the source language segment."""
+        if self.source_lang and self.source_lang in self.tuvs:
+            return self.tuvs[self.source_lang]
+        # source_lang が未指定の場合は最初のセグメントを返す
+        if self.tuvs:
+            return next(iter(self.tuvs.values()))
+        return None
+
+    def get_target(self) -> Tuv | None:
+        """Get the target language segment."""
+        if self.target_lang and self.target_lang in self.tuvs:
+            return self.tuvs[self.target_lang]
+        return None
+
+    def has_target(self) -> bool:
+        """Whether the target segment exists and is non-empty."""
+        seg = self.get_target()
+        return seg is not None and not seg.is_empty()

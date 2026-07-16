@@ -1,0 +1,4 @@
+changedate,changeid,creationdate,creationid,prop_aligned,prop_client,prop_corrected,prop_domain,prop_project,prop_subject,prop_x-document,text_en,text_ja
+20260131T181704Z,user,20260131T181704Z,user,no, ,no, , , ,aaa.txt,"&lt;p&gt;Lorem ipsum dolor sit amet, &lt;b&gt;consectetur adipiscing elit&lt;/b&gt;.",&lt;p&gt;ロレムイプサムドロールシトアメット、&lt;b&gt;コンセクテトゥルアディピシングエリト&lt;/b&gt;。
+20260131T181704Z,user,20260131T181704Z,user,no, ,no, , , ,aaa.txt,Duis feugiat &lt;i&gt;volutpat tellus&lt;/i&gt; a lobortis.&lt;/p&gt;,デュイスフェウギアト&lt;i&gt;ヴォルットパトテルルス&lt;/i&gt;アロボルティス。&lt;/p&gt;
+20260131T190839Z,user,20260131T181704Z,user,no, ,no, , , ,aaa.txt,"&lt;p&gt;Maecenas hendrerit et odio non tincidunt.&lt;br&gt;Vivamus nec &lt;b&gt;feugiat nibh&lt;/b&gt;, sit amet posuere sem.",&lt;p&gt;マエケナスヘンドレリトエトオディオノンティンクントゥム。&lt;br&gt;ヴィヴァムスネク&lt;b&gt;フェウギアトニブ&lt;/b&gt;、シトアメットポズエレセム。

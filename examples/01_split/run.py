@@ -13,8 +13,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from tmxkit.io import parse_header, stream_tu
-from tmxkit.io.splitter_sink import consume_and_split
+from tmxkit.ops import split
 
 
 def _classify_by_x_document(tu) -> str | None:
@@ -42,15 +41,7 @@ def main() -> None:
     input_path = base / 'input.tmx'
     out_dir = base / 'split'
 
-    tmx_header = parse_header(input_path)
-    tu_stream = stream_tu(input_path)
-
-    written = consume_and_split(
-        input_stream=tu_stream,
-        key_extractor=_classify_by_x_document,
-        header_obj=tmx_header,
-        base_dir=out_dir,
-    )
+    written = split(input_path, _classify_by_x_document, out_dir)
     print(written)
 
     total = sum(written.values())

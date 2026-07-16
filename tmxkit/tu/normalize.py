@@ -1,8 +1,6 @@
-"""Normalization and light processing.
+"""Normalization and light processing"""
+from __future__ import annotations
 
-This module provides utilities for normalizing whitespace and performing
-minor text cleanups used for TMX segment content.
-"""
 import re
 
 

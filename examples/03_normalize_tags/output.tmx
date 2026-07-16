@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE tmx SYSTEM "tmx14.dtd">
 <tmx version="1.4">
-<header creationtool="tmxkit" creationtoolversion="0.1.0"/><body>
+<header creationtool="tmxkit" creationtoolversion="0.2.0"/><body>
 <tu changedate="20260131T181814Z" creationdate="20260131T181814Z" creationid="user" changeid="user">
     <prop type="client"> </prop>
     <prop type="project"> </prop>
@@ -166,9 +166,5 @@
     <tuv xml:lang="ja">
       <seg><bpt i="2">&lt;mq:rxt displaytext="&amp;lt;p&amp;gt;" val="&amp;lt;p&amp;gt;"&gt;</bpt>ウトラオレエト、ヴェリトアフリンギラヴェネナティス、ジュストエストルトゥルムクアム、エゲト<bpt i="1">&lt;mq:rxt displaytext="&amp;lt;b&amp;gt;" val="&amp;lt;b&amp;gt;"&gt;</bpt>スケレリスクエエニム<ept i="1">&lt;/mq:rxt displaytext="&amp;lt;/b&amp;gt;" val="&amp;lt;/b&amp;gt;"&gt;</ept>オディオウトレオ。<ept i="2">&lt;/mq:rxt displaytext="&amp;lt;/p&amp;gt;" val="&amp;lt;/p&amp;gt;"&gt;</ept></seg></tuv>
   </tu>
-</body>
-</tmx>
-</body>
-</tmx>
 </body>
 </tmx>
